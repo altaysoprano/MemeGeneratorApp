@@ -11,7 +11,9 @@ import com.plcoding.jetpackcomposepokedex.repository.MemeRepository
 import com.plcoding.jetpackcomposepokedex.util.Constants.PAGE_SIZE
 import com.plcoding.jetpackcomposepokedex.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,25 +25,26 @@ class MemeListViewModel @Inject constructor(
     var memeList = mutableStateOf<List<MemeListEntry>>(listOf())
     var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
-    var endReached = mutableStateOf(false)
 
     init {
         loadMemePaginated()
     }
 
+    fun searchMemeList(query: String) {
+
+    }
+
     fun loadMemePaginated() {
         isLoading.value = true
         viewModelScope.launch {
-            val result = repository.getMemeList(PAGE_SIZE, curPage * PAGE_SIZE)
+            val result = repository.getMemeList()
             when(result) {
                 is Resource.Success -> {
-                    endReached.value = curPage * PAGE_SIZE >= (result.data!!.data.memes.size - 1)
-                    val memeEntries = result.data.data.memes
-                    curPage++
+                    val memeEntries = result.data!!.data.memes
 
                     loadError.value = ""
                     isLoading.value = false
-                    memeList.value += memeEntries.map {it.memeToMemeListEntry()}
+                    memeList.value = memeEntries.map {it.memeToMemeListEntry()}
                 }
                 is Resource.Error -> {
                     loadError.value = result.message!!

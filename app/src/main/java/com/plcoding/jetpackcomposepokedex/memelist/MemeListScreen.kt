@@ -38,7 +38,8 @@ import com.plcoding.jetpackcomposepokedex.ui.theme.RobotoCondensed
 
 @Composable
 fun MemeListScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: MemeListViewModel = hiltViewModel()
 ) {
     Surface(
         color = MaterialTheme.colors.background,
@@ -52,16 +53,12 @@ fun MemeListScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                
+                viewModel.searchMemeList(it)
             }
             Spacer(modifier = Modifier.height(16.dp))
             MemeList(navController = navController)
-            
-
         }
-
     }
-
 }
 
 @Composable
@@ -94,11 +91,11 @@ fun SearchBar(
                 .background(Color.White, CircleShape)
                 .padding(horizontal = 20.dp, vertical = 12.dp)
                 .onFocusChanged {
-                    isFocused = it.isFocused
-                    Log.d("Mesaj", "isHintDisplayed:$isFocused and isFocused:${it.isFocused}")
+                    isFocused = it.isFocused && text.isEmpty()
                 }
         )
         if(!isFocused) {
+            text = ""
             Text(
                 text = hint,
                 color = Color.LightGray,
@@ -139,7 +136,9 @@ fun MemeEntry(
                         startY = 300f
                     )
                 ))
-            Box(modifier = Modifier.fillMaxSize().padding(12.dp),
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
             contentAlignment = Alignment.BottomStart) {
                 Text(entry.memeName, style = TextStyle(color = Color.White, fontSize = 16.sp))
             }
@@ -153,8 +152,6 @@ fun MemeList(
     viewModel: MemeListViewModel = hiltViewModel()
 ) {
     val memeList by remember {viewModel.memeList }
-    val endReached by remember {viewModel.endReached}
-    val loadError by remember {viewModel.loadError}
     val isLoading by remember {viewModel.isLoading}
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
@@ -164,7 +161,7 @@ fun MemeList(
             memeList.size / 2 + 1
         }
         items(itemCount) {
-            if(it >= itemCount -1 && !endReached && !isLoading) {
+            if(it >= itemCount -1 && !isLoading) {
                 viewModel.loadMemePaginated()
             }
             MemeRow(rowIndex = it, entries = memeList, navController = navController)

@@ -7,8 +7,5 @@ import retrofit2.http.Query
 interface MemeApi {
 
     @GET("get_memes")
-    suspend fun getMemeList(
-        @Query("limit") limit: Int,
-        @Query("offset") offset: Int
-    ): MemeList
+    suspend fun getMemeList(): MemeList
 }

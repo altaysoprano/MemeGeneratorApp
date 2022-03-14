@@ -11,9 +11,9 @@ class MemeRepository @Inject constructor(
     private val api: MemeApi
 ){
 
-    suspend fun getMemeList(limit: Int, offset: Int): Resource<MemeList> {
+    suspend fun getMemeList(): Resource<MemeList> {
         val response = try {
-            api.getMemeList(limit, offset)
+            api.getMemeList()
         }catch(e: Exception) {
             return Resource.Error("An unknown error occured.")
         }
