@@ -1,6 +1,8 @@
 package com.plcoding.jetpackcomposepokedex.memelist
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,18 +22,34 @@ import javax.inject.Inject
 class MemeListViewModel @Inject constructor(
     private val repository: MemeRepository
 ) : ViewModel() {
-    private var curPage = 0
 
     var memeList = mutableStateOf<List<MemeListEntry>>(listOf())
     var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
+
+    private val _searchText: MutableState<String> = mutableStateOf("")
+    val searchText: State<String> = _searchText
+
+    private val _isSearching: MutableState<Boolean> = mutableStateOf(false)
+    val isSearching: State<Boolean> = _isSearching
+
+    private var searchedList = listOf<MemeListEntry>()
 
     init {
         loadMemePaginated()
     }
 
     fun searchMemeList(query: String) {
+        viewModelScope.launch {
+            val result = searchedList.filter {
+                it.memeName.contains(query.trim(), ignoreCase = true)
+            }
+            memeList.value = result
+        }
+    }
 
+    fun updateText(text: String) {
+        _searchText.value = text
     }
 
     fun loadMemePaginated() {
@@ -44,6 +62,7 @@ class MemeListViewModel @Inject constructor(
 
                     loadError.value = ""
                     isLoading.value = false
+                    searchedList = memeEntries.map { it.memeToMemeListEntry() }
                     memeList.value = memeEntries.map {it.memeToMemeListEntry()}
                 }
                 is Resource.Error -> {

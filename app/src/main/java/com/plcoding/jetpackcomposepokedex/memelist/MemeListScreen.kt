@@ -51,10 +51,11 @@ fun MemeListScreen(
                 hint = "Search Meme...",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                viewModel.searchMemeList(it)
-            }
+                    .padding(16.dp),
+                onSearch = {
+                    viewModel.searchMemeList(it)
+                }
+            )
             Spacer(modifier = Modifier.height(16.dp))
             MemeList(navController = navController)
         }
@@ -65,11 +66,11 @@ fun MemeListScreen(
 fun SearchBar(
     modifier: Modifier = Modifier,
     hint: String = "",
-    onSearch: (String) -> Unit = {}
+    onSearch: (String) -> Unit = {},
+    viewModel: MemeListViewModel = hiltViewModel()
 ) {
-    var text by remember {
-        mutableStateOf("")
-    }
+
+    val searchText by viewModel.searchText
 
     var isFocused by remember {
         mutableStateOf(false)
@@ -77,9 +78,9 @@ fun SearchBar(
 
     Box(modifier = modifier ) {
         BasicTextField(
-            value = text,
+            value = searchText,
             onValueChange = {
-                text = it
+                viewModel.updateText(it)
                 onSearch(it)
             },
             maxLines = 1,
@@ -91,11 +92,11 @@ fun SearchBar(
                 .background(Color.White, CircleShape)
                 .padding(horizontal = 20.dp, vertical = 12.dp)
                 .onFocusChanged {
-                    isFocused = it.isFocused && text.isEmpty()
+                    isFocused = it.isFocused && searchText.isEmpty()
                 }
         )
         if(!isFocused) {
-            text = ""
+            viewModel.updateText("")
             Text(
                 text = hint,
                 color = Color.LightGray,
@@ -151,8 +152,7 @@ fun MemeList(
     navController: NavController,
     viewModel: MemeListViewModel = hiltViewModel()
 ) {
-    val memeList by remember {viewModel.memeList }
-    val isLoading by remember {viewModel.isLoading}
+    val memeList by viewModel.memeList
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
         val itemCount = if(memeList.size % 2 == 0) {
@@ -161,9 +161,6 @@ fun MemeList(
             memeList.size / 2 + 1
         }
         items(itemCount) {
-            if(it >= itemCount -1 && !isLoading) {
-                viewModel.loadMemePaginated()
-            }
             MemeRow(rowIndex = it, entries = memeList, navController = navController)
         }
     }
