@@ -14,6 +14,7 @@ import com.plcoding.jetpackcomposepokedex.util.Constants.PAGE_SIZE
 import com.plcoding.jetpackcomposepokedex.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import okhttp3.Dispatcher
 import javax.inject.Inject
@@ -30,8 +31,8 @@ class MemeListViewModel @Inject constructor(
     private val _searchText: MutableState<String> = mutableStateOf("")
     val searchText: State<String> = _searchText
 
-    private val _isSearching: MutableState<Boolean> = mutableStateOf(false)
-    val isSearching: State<Boolean> = _isSearching
+    private val _isFocused: MutableState<Boolean> = mutableStateOf(false)
+    val isFocused: State<Boolean> = _isFocused
 
     private var searchedList = listOf<MemeListEntry>()
 
@@ -50,6 +51,10 @@ class MemeListViewModel @Inject constructor(
 
     fun updateText(text: String) {
         _searchText.value = text
+    }
+
+    fun updateFocused(focused: Boolean) {
+        _isFocused.value = focused
     }
 
     fun loadMemePaginated() {

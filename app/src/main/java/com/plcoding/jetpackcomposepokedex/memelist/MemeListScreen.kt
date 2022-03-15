@@ -72,9 +72,7 @@ fun SearchBar(
 
     val searchText by viewModel.searchText
 
-    var isFocused by remember {
-        mutableStateOf(false)
-    }
+    val isFocused by viewModel.isFocused
 
     Box(modifier = modifier ) {
         BasicTextField(
@@ -92,11 +90,12 @@ fun SearchBar(
                 .background(Color.White, CircleShape)
                 .padding(horizontal = 20.dp, vertical = 12.dp)
                 .onFocusChanged {
-                    isFocused = it.isFocused && searchText.isEmpty()
+                    viewModel.updateFocused(it.isFocused && searchText.isEmpty())
                 }
         )
         if(!isFocused) {
             viewModel.updateText("")
+            viewModel.searchMemeList(searchText)
             Text(
                 text = hint,
                 color = Color.LightGray,
