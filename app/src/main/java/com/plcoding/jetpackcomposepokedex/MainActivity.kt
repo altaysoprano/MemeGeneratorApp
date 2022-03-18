@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.plcoding.jetpackcomposepokedex.memedetail.MemeDetailScreen
 import com.plcoding.jetpackcomposepokedex.memelist.MemeListScreen
 import com.plcoding.jetpackcomposepokedex.ui.theme.JetpackComposePokedexTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,16 +34,21 @@ class MainActivity : ComponentActivity() {
                         MemeListScreen(navController = navController)
                     }
                     composable(
-                        "meme_detail_screen/{memeName}",
+                        "meme_detail_screen/{memeId}",
                         arguments = listOf(
                             navArgument("memeId") {
-                                type = NavType.IntType
+                                type = NavType.StringType
                             }
                         )
                     ) {
-                        val memeName = remember {
-                            it.arguments?.getInt("memeId")
+                        val memeId = remember {
+                            it.arguments?.getString("memeId")
                         }
+                        MemeDetailScreen(
+                            navController = navController,
+                            text0 = "",
+                            text1 = "",
+                            memeId = memeId ?: "")
                     }
                 }
             }

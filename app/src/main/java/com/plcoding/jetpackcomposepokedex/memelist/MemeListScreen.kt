@@ -117,7 +117,12 @@ fun MemeEntry(
         shape = RoundedCornerShape(15.dp),
         elevation = 5.dp
     ) {
-        Box(modifier = Modifier.height(200.dp)) {
+        Box(modifier = Modifier
+            .height(200.dp)
+            .clickable {
+                navController.navigate("meme_detail_screen/${entry.memeId}")
+            }
+        ) {
             Image(
                 painter = rememberCoilPainter(request = ImageRequest.Builder(LocalContext.current)
                     .data(entry.imageUrl)
@@ -135,7 +140,8 @@ fun MemeEntry(
                         ),
                         startY = 300f
                     )
-                ))
+                )
+            )
             Box(modifier = Modifier
                 .fillMaxSize()
                 .padding(12.dp),

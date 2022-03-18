@@ -4,5 +4,9 @@ object Constants {
 
     const val BASE_URL = "https://api.imgflip.com/"
 
-    const val PAGE_SIZE = 20
+    const val USER_NAME = "hasanaltay97"
+
+    const val PASSWORD = "OYLEbir7"
+
+
 }

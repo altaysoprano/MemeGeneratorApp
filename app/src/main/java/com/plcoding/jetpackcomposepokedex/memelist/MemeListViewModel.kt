@@ -10,7 +10,6 @@ import com.plcoding.jetpackcomposepokedex.data.models.MemeListEntry
 import com.plcoding.jetpackcomposepokedex.data.remote.MemeApi
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.meme_list.Meme
 import com.plcoding.jetpackcomposepokedex.repository.MemeRepository
-import com.plcoding.jetpackcomposepokedex.util.Constants.PAGE_SIZE
 import com.plcoding.jetpackcomposepokedex.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

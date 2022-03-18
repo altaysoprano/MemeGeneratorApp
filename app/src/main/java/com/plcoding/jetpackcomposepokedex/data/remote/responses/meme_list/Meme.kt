@@ -14,7 +14,8 @@ data class Meme(
     fun memeToMemeListEntry(): MemeListEntry{
         return MemeListEntry(
             memeName = name,
-            imageUrl = url
+            imageUrl = url,
+            memeId = id
         )
     }
 }
