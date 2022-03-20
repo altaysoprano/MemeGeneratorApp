@@ -15,7 +15,9 @@ data class Meme(
         return MemeListEntry(
             memeName = name,
             imageUrl = url,
-            memeId = id
+            memeId = id,
+            height = height,
+            width = width
         )
     }
 }

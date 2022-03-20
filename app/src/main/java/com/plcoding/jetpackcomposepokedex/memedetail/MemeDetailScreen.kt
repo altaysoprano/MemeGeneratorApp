@@ -1,26 +1,28 @@
 package com.plcoding.jetpackcomposepokedex.memedetail
 
+import android.util.Log
 import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,63 +37,34 @@ import com.plcoding.jetpackcomposepokedex.util.Resource
 fun MemeDetailScreen(
     viewModel: MemeDetailViewModel = hiltViewModel(),
     navController: NavController,
-    text0: String,
-    text1: String,
     memeId: String,
-    memeImageSize: Dp = 200.dp,
+    memeHeight: Int,
+    memeWidth: Int,
     topPadding: Dp = 20.dp
 ) {
+    val text0 by viewModel.text0
+    val text1 by viewModel.text1
+
     val memeInfo = produceState<Resource<Meme>>(initialValue = Resource.Loading()) {
-        value = viewModel.getMemeInfo(text0, text1, memeId)
+        value = viewModel.getMemeInfo("ghfjdkl", "jd", memeId)
     }.value
-    Box(
+
+    //BURADAN DEVAM
+
+    Column(
         modifier = Modifier
+            .fillMaxSize()
             .background(MaterialTheme.colors.background)
     ) {
-        MemeDetailTopSection(
-            navController = navController,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.1f)
-                .align(Alignment.TopCenter)
-        )
+        MemeDetailTopSection(navController = navController)
+        Spacer(modifier = Modifier.height(16.dp))
         MemeDetailStateWrapper(
             memeInfo = memeInfo,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = topPadding + memeImageSize / 2f,
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                )
-                .shadow(10.dp, RoundedCornerShape(10.dp))
-                .clip(RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colors.surface)
-                .padding(16.dp)
-                .align(Alignment.BottomCenter),
-            loadingModifier = Modifier
-                .size(50.dp)
-                .align(Alignment.Center)
+            memeWidth = memeWidth,
+            memeHeight = memeHeight / 2
         )
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            if (memeInfo is Resource.Success) {
-                memeInfo.data?.data.let {
-                    Image(
-                        painter = rememberCoilPainter(request = it?.url),
-                        contentDescription = it?.page_url,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(memeImageSize)
-                            .offset(y = topPadding)
-                    )
-                }
-            }
-        }
+        Text("xdlfgkjhgfkdl")
+
     }
 }
 
@@ -111,6 +84,7 @@ fun MemeDetailTopSection(
                     )
                 )
             )
+            .fillMaxHeight(0.1f)
     ) {
         Box(
             modifier = Modifier
@@ -126,6 +100,7 @@ fun MemeDetailTopSection(
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.Center)
+                    .padding(8.dp)
             )
         }
     }
@@ -135,17 +110,35 @@ fun MemeDetailTopSection(
 fun MemeDetailStateWrapper(
     memeInfo: Resource<Meme>,
     modifier: Modifier = Modifier,
+    memeWidth: Int,
+    memeHeight: Int,
     loadingModifier: Modifier = Modifier
 ) {
     when (memeInfo) {
         is Resource.Success -> {
-
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxHeight(0.6f),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                memeInfo.data?.data.let {
+                    Image(
+                        painter = rememberCoilPainter(request = it?.url),
+                        contentDescription = it?.page_url,
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentScale = ContentScale.Fit
+                    )
+                }
+            }
         }
         is Resource.Error -> {
             Text(
                 text = memeInfo.message!!,
                 color = Color.Red,
-                modifier = modifier
+                modifier = modifier,
+                textAlign = TextAlign.Center
             )
         }
         is Resource.Loading -> {

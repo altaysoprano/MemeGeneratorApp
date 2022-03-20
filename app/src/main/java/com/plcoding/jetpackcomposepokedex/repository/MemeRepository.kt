@@ -1,5 +1,6 @@
 package com.plcoding.jetpackcomposepokedex.repository
 
+import android.util.Log
 import com.plcoding.jetpackcomposepokedex.data.remote.MemeApi
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.meme.Meme
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.meme_list.MemeList
@@ -27,6 +28,9 @@ class MemeRepository @Inject constructor(
             api.getMemeDetail(Constants.USER_NAME, Constants.PASSWORD, text0, text1, memeId)
         } catch (e: Exception) {
             return Resource.Error("An unknown error occured.")
+        }
+        if(!response.success) {
+            return Resource.Error("Request failed")
         }
         return Resource.Success(response)
     }

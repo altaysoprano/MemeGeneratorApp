@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,21 +35,34 @@ class MainActivity : ComponentActivity() {
                         MemeListScreen(navController = navController)
                     }
                     composable(
-                        "meme_detail_screen/{memeId}",
+                        "meme_detail_screen/{memeId}/{memeHeight}/{memeWidth}",
                         arguments = listOf(
                             navArgument("memeId") {
                                 type = NavType.StringType
+                            },
+                            navArgument("memeHeight") {
+                                type = NavType.IntType
+                            },
+                            navArgument("memeWidth") {
+                                type = NavType.IntType
                             }
                         )
                     ) {
                         val memeId = remember {
                             it.arguments?.getString("memeId")
                         }
+                        val memeHeight = remember {
+                            it.arguments?.getInt("memeHeight")
+                        }
+                        val memeWidth = remember {
+                            it.arguments?.getInt("memeWidth")
+                        }
                         MemeDetailScreen(
                             navController = navController,
-                            text0 = "",
-                            text1 = "",
-                            memeId = memeId ?: "")
+                            memeId = memeId ?: "",
+                            memeHeight = memeHeight ?: 10,
+                            memeWidth = memeWidth ?: 10
+                            )
                     }
                 }
             }
