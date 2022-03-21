@@ -26,4 +26,12 @@ class MemeDetailViewModel @Inject constructor(
     suspend fun getMemeInfo(text0: String, text1: String, id: String): Resource<Meme> {
         return repository.getMemeInfo(text0, text1, id)
     }
+
+    fun setText0(text: String) {
+        _text0.value = text
+    }
+
+    fun setText1(text: String) {
+        _text1.value = text
+    }
 }

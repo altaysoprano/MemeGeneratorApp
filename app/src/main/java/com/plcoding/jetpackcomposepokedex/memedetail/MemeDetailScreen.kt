@@ -38,33 +38,38 @@ fun MemeDetailScreen(
     viewModel: MemeDetailViewModel = hiltViewModel(),
     navController: NavController,
     memeId: String,
-    memeHeight: Int,
-    memeWidth: Int,
-    topPadding: Dp = 20.dp
 ) {
-    val text0 by viewModel.text0
-    val text1 by viewModel.text1
 
     val memeInfo = produceState<Resource<Meme>>(initialValue = Resource.Loading()) {
-        value = viewModel.getMemeInfo("ghfjdkl", "jd", memeId)
+        value = viewModel.getMemeInfo("sd", "sdf", memeId)
     }.value
-
-    //BURADAN DEVAM
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        MaterialTheme.colors.background,
+                        Color.Transparent
+                    )
+                )
+            )
     ) {
         MemeDetailTopSection(navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
-        MemeDetailStateWrapper(
-            memeInfo = memeInfo,
-            memeWidth = memeWidth,
-            memeHeight = memeHeight / 2
-        )
-        Text("xdlfgkjhgfkdl")
-
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+                .fillMaxHeight(0.6f),
+            contentAlignment = Alignment.Center
+        ) {
+            MemeDetailStateWrapper(
+                memeInfo = memeInfo,
+            )
+        }
+        MemeTextField()
     }
 }
 
@@ -110,28 +115,20 @@ fun MemeDetailTopSection(
 fun MemeDetailStateWrapper(
     memeInfo: Resource<Meme>,
     modifier: Modifier = Modifier,
-    memeWidth: Int,
-    memeHeight: Int,
     loadingModifier: Modifier = Modifier
 ) {
     when (memeInfo) {
         is Resource.Success -> {
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxHeight(0.6f),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                memeInfo.data?.data.let {
-                    Image(
-                        painter = rememberCoilPainter(request = it?.url),
-                        contentDescription = it?.page_url,
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentScale = ContentScale.Fit
-                    )
-                }
+            memeInfo.data?.data.let {
+                Image(
+                    painter = rememberCoilPainter(request = it?.url),
+                    contentDescription = it?.page_url,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentScale = ContentScale.Fit
+                )
             }
+
         }
         is Resource.Error -> {
             Text(

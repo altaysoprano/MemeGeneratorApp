@@ -60,8 +60,6 @@ class MainActivity : ComponentActivity() {
                         MemeDetailScreen(
                             navController = navController,
                             memeId = memeId ?: "",
-                            memeHeight = memeHeight ?: 10,
-                            memeWidth = memeWidth ?: 10
                             )
                     }
                 }
