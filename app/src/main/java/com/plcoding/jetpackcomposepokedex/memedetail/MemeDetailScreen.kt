@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
+import com.plcoding.jetpackcomposepokedex.R
 import com.plcoding.jetpackcomposepokedex.data.models.MemeListEntry
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.meme.Meme
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.meme_list.MemeList
@@ -41,7 +42,7 @@ fun MemeDetailScreen(
 ) {
 
     val memeInfo = produceState<Resource<Meme>>(initialValue = Resource.Loading()) {
-        value = viewModel.getMemeInfo("sd", "sdf", memeId)
+        value = viewModel.getMemeInfo("Text 1", "Text 2", memeId)
     }.value
 
     Column(
@@ -121,7 +122,8 @@ fun MemeDetailStateWrapper(
         is Resource.Success -> {
             memeInfo.data?.data.let {
                 Image(
-                    painter = rememberCoilPainter(request = it?.url),
+                    painter = rememberCoilPainter
+                        (request = it?.url, fadeIn = true),
                     contentDescription = it?.page_url,
                     modifier = Modifier
                         .fillMaxSize(),

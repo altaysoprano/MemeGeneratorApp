@@ -17,7 +17,8 @@ data class Meme(
             imageUrl = url,
             memeId = id,
             height = height,
-            width = width
+            width = width,
+            boxCount = box_count
         )
     }
 }

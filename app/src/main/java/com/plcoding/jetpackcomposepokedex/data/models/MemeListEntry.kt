@@ -5,5 +5,6 @@ data class MemeListEntry(
     val imageUrl: String,
     val memeId: String,
     val height: Int,
-    val width: Int
+    val width: Int,
+    val boxCount: Int
 )
