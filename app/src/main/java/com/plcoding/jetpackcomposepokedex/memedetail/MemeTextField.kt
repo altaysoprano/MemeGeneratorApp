@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.runtime.getValue
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
@@ -21,10 +22,10 @@ fun MemeTextField(
     viewModel: MemeDetailViewModel = hiltViewModel(),
 ) {
 
-    val text by viewModel.text0
+    val textList = viewModel.textList
 
     TextField(
-        value = text,
+        value = textList[0],
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)

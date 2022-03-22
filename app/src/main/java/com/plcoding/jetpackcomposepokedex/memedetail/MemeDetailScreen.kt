@@ -42,7 +42,7 @@ fun MemeDetailScreen(
 ) {
 
     val memeInfo = produceState<Resource<Meme>>(initialValue = Resource.Loading()) {
-        value = viewModel.getMemeInfo("Text 1", "Text 2", memeId)
+        value = viewModel.getMemeInfo(viewModel.textList, memeId)
     }.value
 
     Column(

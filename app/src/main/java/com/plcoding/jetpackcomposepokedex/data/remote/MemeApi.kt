@@ -18,6 +18,8 @@ interface MemeApi {
         @Query("password") password: String,
         @Query("text0") text0: String,
         @Query("text1") text1: String,
+        @Query("text2") text2: String,
+        @Query("text3") text3: String,
         @Query("template_id") id: String
     ): Meme
 
