@@ -42,12 +42,12 @@ fun MemeDetailScreen(
     boxCount: Int
 ) {
 
-    val list = viewModel.textList
     val memeTextList = viewModel.memeTextList
 
     val memeInfo = produceState<Resource<Meme>>(initialValue = Resource.Loading()) {
+        viewModel.setMemeTextList(boxCount)
         viewModel.setTextList(boxCount)
-        value = viewModel.getMemeInfo(memeTextList, memeId)
+        value = viewModel.getMemeInfo(memeTextList.value, memeId)
     }.value
 
     Column(

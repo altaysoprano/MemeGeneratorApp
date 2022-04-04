@@ -24,9 +24,10 @@ class MemeDetailViewModel @Inject constructor(
     )
     val textList: MutableState<MutableList<String>> = _textList
 
-    var memeTextList: MutableList<String> = mutableListOf(
-        "Text 1", "Text 2", "Text 3", "Text 4", "Text 5"
+    private val _memeTextList: MutableState<MutableList<String>> = mutableStateOf(
+        mutableListOf("", "", "", "", "", "")
     )
+    val memeTextList: MutableState<MutableList<String>> = _memeTextList
 
     suspend fun getMemeInfo(textList: List<String>, id: String): Resource<Meme> {
         return repository.getMemeInfo(textList, id)
@@ -34,7 +35,6 @@ class MemeDetailViewModel @Inject constructor(
 
     fun setText(text: String, textNumber: Int) {
         _textList.value[textNumber] = text
-        Log.d("Mesaj", "ViewModel'da Text: ${_textList.value[textNumber]}")
     }
 
     fun setTextList(boxCount: Int) {
@@ -43,5 +43,13 @@ class MemeDetailViewModel @Inject constructor(
             list.add(i, "")
         }
         _textList.value = list
+    }
+
+    fun setMemeTextList(boxCount: Int) {
+        var list = mutableStateListOf<String>()
+        for(i in 0 until boxCount) {
+            list.add(i, "Text ${i+1}")
+        }
+        _memeTextList.value = list
     }
 }

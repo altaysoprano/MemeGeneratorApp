@@ -38,7 +38,6 @@ fun MemeTextField(
                     .padding(8.dp)
                 ,
                 onValueChange = {
-                    Log.d("Mesaj", "Tetiklendi, Text: $it")
                     viewModel.setText(it, index)
                 },
                 singleLine = true,
@@ -46,7 +45,14 @@ fun MemeTextField(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 placeholder = {
                     Text("Type for Text ${index+1}", color = MaterialTheme.colors.primary)
-                }
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = MaterialTheme.colors.onBackground,
+                    backgroundColor = MaterialTheme.colors.background,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
             )
         }
     }
