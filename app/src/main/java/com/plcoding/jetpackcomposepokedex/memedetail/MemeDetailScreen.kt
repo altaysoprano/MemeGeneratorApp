@@ -39,10 +39,15 @@ fun MemeDetailScreen(
     viewModel: MemeDetailViewModel = hiltViewModel(),
     navController: NavController,
     memeId: String,
+    boxCount: Int
 ) {
 
+    val list = viewModel.textList
+    val memeTextList = viewModel.memeTextList
+
     val memeInfo = produceState<Resource<Meme>>(initialValue = Resource.Loading()) {
-        value = viewModel.getMemeInfo(viewModel.textList, memeId)
+        viewModel.setTextList(boxCount)
+        value = viewModel.getMemeInfo(memeTextList, memeId)
     }.value
 
     Column(
@@ -70,7 +75,8 @@ fun MemeDetailScreen(
                 memeInfo = memeInfo,
             )
         }
-        MemeTextField()
+        Spacer(modifier = Modifier.height(16.dp))
+        MemeTextField(boxCount = boxCount)
     }
 }
 

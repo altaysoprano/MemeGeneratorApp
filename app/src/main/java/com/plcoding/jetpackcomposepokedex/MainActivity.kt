@@ -35,15 +35,12 @@ class MainActivity : ComponentActivity() {
                         MemeListScreen(navController = navController)
                     }
                     composable(
-                        "meme_detail_screen/{memeId}/{memeHeight}/{memeWidth}",
+                        "meme_detail_screen/{memeId}/{boxCount}",
                         arguments = listOf(
                             navArgument("memeId") {
                                 type = NavType.StringType
                             },
-                            navArgument("memeHeight") {
-                                type = NavType.IntType
-                            },
-                            navArgument("memeWidth") {
+                            navArgument("boxCount") {
                                 type = NavType.IntType
                             }
                         )
@@ -51,15 +48,13 @@ class MainActivity : ComponentActivity() {
                         val memeId = remember {
                             it.arguments?.getString("memeId")
                         }
-                        val memeHeight = remember {
-                            it.arguments?.getInt("memeHeight")
-                        }
-                        val memeWidth = remember {
-                            it.arguments?.getInt("memeWidth")
+                        val boxCount = remember {
+                            it.arguments?.getInt("boxCount")
                         }
                         MemeDetailScreen(
                             navController = navController,
                             memeId = memeId ?: "",
+                            boxCount = boxCount ?: -1
                             )
                     }
                 }

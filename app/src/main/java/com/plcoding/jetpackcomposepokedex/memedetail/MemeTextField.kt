@@ -1,7 +1,11 @@
 package com.plcoding.jetpackcomposepokedex.memedetail
 
+import android.util.Log
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,24 +24,30 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun MemeTextField(
     viewModel: MemeDetailViewModel = hiltViewModel(),
+    boxCount: Int
 ) {
 
     val textList = viewModel.textList
-
-    TextField(
-        value = textList[0],
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-        ,
-        onValueChange = {
-            viewModel.setText0(it)
-        },
-        singleLine = true,
-        shape = RoundedCornerShape(8.dp),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        placeholder = {
-            Text("Type for first text", color = MaterialTheme.colors.primary)
-        },
-    )
+    
+    LazyColumn() {
+        items(count = boxCount) { index ->
+            TextField(
+                value = textList.value[index],
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                ,
+                onValueChange = {
+                    Log.d("Mesaj", "Tetiklendi, Text: $it")
+                    viewModel.setText(it, index)
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(8.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                placeholder = {
+                    Text("Type for Text ${index+1}", color = MaterialTheme.colors.primary)
+                }
+            )
+        }
+    }
 }

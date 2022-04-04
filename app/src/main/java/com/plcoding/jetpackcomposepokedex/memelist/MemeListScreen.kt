@@ -120,7 +120,7 @@ fun MemeEntry(
         Box(modifier = Modifier
             .height(200.dp)
             .clickable {
-                navController.navigate("meme_detail_screen/${entry.memeId}/${entry.height}/${entry.width}")
+                navController.navigate("meme_detail_screen/${entry.memeId}/${entry.boxCount}")
             }
         ) {
             Image(
