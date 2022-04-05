@@ -77,6 +77,8 @@ fun MemeDetailScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         MemeTextField(boxCount = boxCount)
+        Spacer(modifier = Modifier.height(8.dp))
+        DetailScreenButton()
     }
 }
 

@@ -1,10 +1,7 @@
 package com.plcoding.jetpackcomposepokedex.memedetail
 
 import android.util.Log
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -29,7 +26,9 @@ fun MemeTextField(
 
     val textList = viewModel.textList
     
-    LazyColumn() {
+    LazyColumn(
+        modifier = Modifier.fillMaxHeight(0.7f)
+    ) {
         items(count = boxCount) { index ->
             TextField(
                 value = textList.value[index],
