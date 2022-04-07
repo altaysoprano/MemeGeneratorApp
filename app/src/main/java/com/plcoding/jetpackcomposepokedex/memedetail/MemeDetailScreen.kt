@@ -64,17 +64,7 @@ fun MemeDetailScreen(
     ) {
         MemeDetailTopSection(navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
-        Box(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(0.6f),
-            contentAlignment = Alignment.Center
-        ) {
-            MemeDetailStateWrapper(
-                memeInfo = memeInfo,
-            )
-        }
+        MemeImageScreen(memeInfo = memeInfo)
         Spacer(modifier = Modifier.height(16.dp))
         MemeTextField(boxCount = boxCount)
         Spacer(modifier = Modifier.height(8.dp))
