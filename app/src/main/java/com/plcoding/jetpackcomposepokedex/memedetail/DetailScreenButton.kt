@@ -24,7 +24,8 @@ fun DetailScreenButton() {
                 .fillMaxHeight()
                 .fillMaxWidth(0.5f)
                 .padding(4.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background)
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
+            elevation = ButtonDefaults.elevation(4.dp)
         ) {
             Icon(
                 Icons.Default.Preview,
@@ -47,7 +48,8 @@ fun DetailScreenButton() {
                 end = 4.dp,
                 bottom = 2.dp
             ),
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onBackground)
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onBackground),
+            elevation = ButtonDefaults.elevation(4.dp)
         ) {
             Icon(
                 Icons.Default.Save,
