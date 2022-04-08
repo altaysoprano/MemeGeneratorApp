@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
@@ -43,12 +44,13 @@ fun MemeDetailScreen(
 ) {
 
     val memeTextList = viewModel.memeTextList
+    val memeInfoState = viewModel.memeInfoState
 
-    val memeInfo = produceState<Resource<Meme>>(initialValue = Resource.Loading()) {
+    LaunchedEffect(key1 = true) {
         viewModel.setMemeTextList(boxCount)
         viewModel.setTextList(boxCount)
-        value = viewModel.getMemeInfo(memeTextList.value, memeId)
-    }.value
+        viewModel.getMemeInfo(memeTextList.value, memeId)
+    }
 
     Column(
         modifier = Modifier
@@ -72,7 +74,7 @@ fun MemeDetailScreen(
             contentAlignment = Alignment.Center
         ) {
             MemeDetailStateWrapper(
-                memeInfo = memeInfo,
+                memeInfo = memeInfoState.value
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -122,38 +124,30 @@ fun MemeDetailTopSection(
 
 @Composable
 fun MemeDetailStateWrapper(
-    memeInfo: Resource<Meme>,
+    memeInfo: MemeInfoState,
     modifier: Modifier = Modifier,
     loadingModifier: Modifier = Modifier
 ) {
-    when (memeInfo) {
-        is Resource.Success -> {
-            memeInfo.data?.data.let {
-                Image(
-                    painter = rememberCoilPainter
-                        (request = it?.url, fadeIn = true),
-                    contentDescription = it?.page_url,
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentScale = ContentScale.Fit
-                )
-            }
-
-        }
-        is Resource.Error -> {
-            Text(
-                text = memeInfo.message!!,
-                color = Color.Red,
-                modifier = modifier,
-                textAlign = TextAlign.Center
-            )
-        }
-        is Resource.Loading -> {
-            CircularProgressIndicator(
-                color = MaterialTheme.colors.primary,
-                modifier = loadingModifier
-            )
-        }
+    Image(
+        painter = rememberCoilPainter
+            (request = memeInfo.data?.data?.url, fadeIn = true),
+        contentDescription = memeInfo.data?.data?.page_url,
+        modifier = Modifier
+            .fillMaxSize(),
+        contentScale = ContentScale.Fit
+    )
+    if(memeInfo.isLoading) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colors.primary,
+            modifier = loadingModifier
+        )
     }
-
+    if(memeInfo.error.isNotBlank()) {
+        Text(
+            text = memeInfo.error!!,
+            color = Color.Red,
+            modifier = modifier,
+            textAlign = TextAlign.Center
+        )
+    }
 }

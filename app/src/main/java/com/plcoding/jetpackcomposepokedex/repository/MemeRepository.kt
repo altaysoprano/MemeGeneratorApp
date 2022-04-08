@@ -7,6 +7,8 @@ import com.plcoding.jetpackcomposepokedex.data.remote.responses.meme_list.MemeLi
 import com.plcoding.jetpackcomposepokedex.util.Constants
 import com.plcoding.jetpackcomposepokedex.util.Resource
 import dagger.hilt.android.scopes.ActivityScoped
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @ActivityScoped
@@ -23,21 +25,22 @@ class MemeRepository @Inject constructor(
         return Resource.Success(response)
     }
 
-    suspend fun getMemeInfo(textList: List<String>, memeId: String): Resource<Meme> {
-        val response = try {
-            api.getMemeDetail(
+    suspend fun getMemeInfo(textList: List<String>, memeId: String): Flow<Resource<Meme>> = flow {
+        try {
+            emit(Resource.Loading<Meme>())
+            val response = api.getMemeDetail(
                 Constants.USER_NAME,
                 Constants.PASSWORD,
                 memeId,
                 *textList.toTypedArray()
             )
+            if (!response.success) {
+                emit(Resource.Error("Request failed"))
+            }
+            emit(Resource.Success<Meme>(data = response))
         }
         catch (e: Exception) {
-            return Resource.Error("An unknown error occured.")
+            emit(Resource.Error<Meme>("An unknown error occured."))
         }
-        if (!response.success) {
-            return Resource.Error("Request failed")
-        }
-        return Resource.Success(response)
     }
 }
