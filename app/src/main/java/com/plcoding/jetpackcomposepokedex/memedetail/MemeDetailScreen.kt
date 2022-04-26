@@ -43,6 +43,7 @@ fun MemeDetailScreen(
     boxCount: Int
 ) {
 
+    val textList = viewModel.textList
     val memeTextList = viewModel.memeTextList
     val memeInfoState = viewModel.memeInfoState
 
@@ -80,7 +81,7 @@ fun MemeDetailScreen(
         Spacer(modifier = Modifier.height(16.dp))
         MemeTextField(boxCount = boxCount)
         Spacer(modifier = Modifier.height(8.dp))
-        DetailScreenButton()
+        DetailScreenButton { viewModel.getMemeInfo(textList.value, memeId) }
     }
 }
 

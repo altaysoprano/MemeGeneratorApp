@@ -9,6 +9,8 @@ import com.plcoding.jetpackcomposepokedex.util.Resource
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 @ActivityScoped
@@ -25,7 +27,7 @@ class MemeRepository @Inject constructor(
         return Resource.Success(response)
     }
 
-    suspend fun getMemeInfo(textList: List<String>, memeId: String): Flow<Resource<Meme>> = flow {
+     fun getMemeInfo(textList: List<String>, memeId: String): Flow<Resource<Meme>> = flow {
         try {
             emit(Resource.Loading<Meme>())
             val response = api.getMemeDetail(
@@ -39,8 +41,11 @@ class MemeRepository @Inject constructor(
             }
             emit(Resource.Success<Meme>(data = response))
         }
-        catch (e: Exception) {
+        catch (e: HttpException) {
             emit(Resource.Error<Meme>("An unknown error occured."))
         }
+         catch (e: IOException) {
+             emit(Resource.Error<Meme>("Please check your internet connection."))
+         }
     }
 }

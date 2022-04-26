@@ -37,7 +37,7 @@ class MemeDetailViewModel @Inject constructor(
     )
     val memeInfoState: MutableState<MemeInfoState> = _memeInfoState
 
-    suspend fun getMemeInfo(textList: List<String>, id: String) {
+    fun getMemeInfo(textList: List<String>, id: String) {
         repository.getMemeInfo(textList, id).onEach { result ->
             when (result) {
                 is Resource.Success -> {

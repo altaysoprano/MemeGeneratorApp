@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DetailScreenButton() {
+fun DetailScreenButton(
+    onPreviewClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -19,7 +21,7 @@ fun DetailScreenButton() {
             .padding(4.dp)
     ) {
         Button(
-            onClick = {},
+            onClick = onPreviewClick,
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(0.5f)
