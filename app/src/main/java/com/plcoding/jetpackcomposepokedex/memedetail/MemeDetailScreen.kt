@@ -81,13 +81,7 @@ fun MemeDetailScreen(
         Spacer(modifier = Modifier.height(16.dp))
         MemeTextField(boxCount = boxCount)
         Spacer(modifier = Modifier.height(8.dp))
-        DetailScreenButton {
-            if (textList.value.all { it == "" }) {
-                viewModel.getMemeInfo(mutableListOf(" ", " ", " ", " ", " "), memeId)
-            } else {
-                viewModel.getMemeInfo(textList.value, memeId)
-            }
-        }
+        DetailScreenButton { viewModel.getMemeInfo(textList.value, memeId) }
     }
 }
 
