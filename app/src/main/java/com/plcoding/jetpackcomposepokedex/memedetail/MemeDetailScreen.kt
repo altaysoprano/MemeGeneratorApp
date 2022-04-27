@@ -81,7 +81,13 @@ fun MemeDetailScreen(
         Spacer(modifier = Modifier.height(16.dp))
         MemeTextField(boxCount = boxCount)
         Spacer(modifier = Modifier.height(8.dp))
-        DetailScreenButton { viewModel.getMemeInfo(textList.value, memeId) }
+        DetailScreenButton {
+            if (textList.value.all { it == "" }) {
+                viewModel.getMemeInfo(mutableListOf(" ", " ", " ", " ", " "), memeId)
+            } else {
+                viewModel.getMemeInfo(textList.value, memeId)
+            }
+        }
     }
 }
 
@@ -137,13 +143,13 @@ fun MemeDetailStateWrapper(
             .fillMaxSize(),
         contentScale = ContentScale.Fit
     )
-    if(memeInfo.isLoading) {
+    if (memeInfo.isLoading) {
         CircularProgressIndicator(
             color = MaterialTheme.colors.primary,
             modifier = loadingModifier
         )
     }
-    if(memeInfo.error.isNotBlank()) {
+    if (memeInfo.error.isNotBlank()) {
         Text(
             text = memeInfo.error!!,
             color = Color.Red,

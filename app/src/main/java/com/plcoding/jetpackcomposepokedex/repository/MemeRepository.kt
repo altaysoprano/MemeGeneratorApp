@@ -36,10 +36,10 @@ class MemeRepository @Inject constructor(
                 memeId,
                 *textList.toTypedArray()
             )
+            emit(Resource.Success<Meme>(data = response))
             if (!response.success) {
                 emit(Resource.Error("Request failed"))
             }
-            emit(Resource.Success<Meme>(data = response))
         }
         catch (e: HttpException) {
             emit(Resource.Error<Meme>("An unknown error occured."))
