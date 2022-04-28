@@ -12,7 +12,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DetailScreenButton(
-    onPreviewClick: () -> Unit
+    onPreviewClick: () -> Unit,
+    onSaveClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -39,7 +40,7 @@ fun DetailScreenButton(
             Text(text ="Preview", color = MaterialTheme.colors.onBackground)
         }
         Button(
-            onClick = {},
+            onClick = {onSaveClick() },
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()

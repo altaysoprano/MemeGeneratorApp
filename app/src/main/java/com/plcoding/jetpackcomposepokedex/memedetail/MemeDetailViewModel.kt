@@ -1,10 +1,11 @@
 package com.plcoding.jetpackcomposepokedex.memedetail
 
+import android.text.TextUtils.indexOf
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,14 +38,22 @@ class MemeDetailViewModel @Inject constructor(
     )
     val memeInfoState: MutableState<MemeInfoState> = _memeInfoState
 
-    fun getMemeInfo(textList: List<String>, id: String) {
-        repository.getMemeInfo(textList, id).onEach { result ->
+    val alertDialogVisible: MutableState<Boolean> = mutableStateOf(false)
+
+    fun getMemeInfo(textList: MutableList<String>, id: String) {
+        val newList = mutableListOf<String>()
+        newList.addAll(textList)
+        for (i in 0 until newList.size) {
+            if (newList[i] == "") newList[i] = " "
+        }
+        repository.getMemeInfo(newList, id).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _memeInfoState.value = MemeInfoState(data = result.data)
                 }
                 is Resource.Error -> {
-                    _memeInfoState.value = MemeInfoState(error = result.message ?: "Unexpected Error")
+                    _memeInfoState.value =
+                        MemeInfoState(error = result.message ?: "Unexpected Error")
                 }
                 is Resource.Loading -> {
                     _memeInfoState.value = MemeInfoState(isLoading = true)
@@ -71,5 +80,13 @@ class MemeDetailViewModel @Inject constructor(
             list.add(i, "Text ${i + 1}")
         }
         _memeTextList.value = list
+    }
+
+    fun onSaveDialogOpen() {
+        alertDialogVisible.value = true
+    }
+
+    fun onSaveDialogDismiss() {
+        alertDialogVisible.value = false
     }
 }

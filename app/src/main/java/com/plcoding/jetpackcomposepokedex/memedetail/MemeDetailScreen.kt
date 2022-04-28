@@ -46,6 +46,7 @@ fun MemeDetailScreen(
     val textList = viewModel.textList
     val memeTextList = viewModel.memeTextList
     val memeInfoState = viewModel.memeInfoState
+    val alertDialogVisible = viewModel.alertDialogVisible
 
     LaunchedEffect(key1 = true) {
         viewModel.setMemeTextList(boxCount)
@@ -81,7 +82,13 @@ fun MemeDetailScreen(
         Spacer(modifier = Modifier.height(16.dp))
         MemeTextField(boxCount = boxCount)
         Spacer(modifier = Modifier.height(8.dp))
-        DetailScreenButton { viewModel.getMemeInfo(textList.value, memeId) }
+        DetailScreenButton(
+            { viewModel.getMemeInfo(textList.value, memeId) },
+            { viewModel.onSaveDialogOpen() }
+        )
+        if(alertDialogVisible.value) SaveAlertDialog {
+            viewModel.onSaveDialogDismiss()
+        }
     }
 }
 
