@@ -38,6 +38,8 @@ class MemeDetailViewModel @Inject constructor(
     )
     val memeInfoState: MutableState<MemeInfoState> = _memeInfoState
 
+    val isTexting: MutableState<Boolean> = mutableStateOf(false)
+
     val alertDialogVisible: MutableState<Boolean> = mutableStateOf(false)
 
     fun getMemeInfo(textList: MutableList<String>, id: String) {
@@ -87,6 +89,10 @@ class MemeDetailViewModel @Inject constructor(
     }
 
     fun onSaveDialogDismiss() {
+        alertDialogVisible.value = false
+    }
+
+    fun onSave() {
         alertDialogVisible.value = false
     }
 }

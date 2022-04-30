@@ -25,6 +25,7 @@ fun MemeTextField(
 ) {
 
     val textList = viewModel.textList
+    val isTexting = viewModel.isTexting
     
     LazyColumn(
         modifier = Modifier.fillMaxHeight(0.7f)

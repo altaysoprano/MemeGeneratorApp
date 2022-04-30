@@ -86,9 +86,10 @@ fun MemeDetailScreen(
             { viewModel.getMemeInfo(textList.value, memeId) },
             { viewModel.onSaveDialogOpen() }
         )
-        if(alertDialogVisible.value) SaveAlertDialog {
-            viewModel.onSaveDialogDismiss()
-        }
+        if(alertDialogVisible.value) SaveAlertDialog(
+            {viewModel.onSaveDialogDismiss()},
+            {viewModel.onSave()}
+        )
     }
 }
 

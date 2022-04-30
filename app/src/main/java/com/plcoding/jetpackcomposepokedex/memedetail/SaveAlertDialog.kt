@@ -7,7 +7,8 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun SaveAlertDialog(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onSave: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -17,7 +18,7 @@ fun SaveAlertDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = { onDismiss() }) {
+            TextButton(onClick = { onSave() }) {
                 Text(text = "SAVE")
             }
         },
