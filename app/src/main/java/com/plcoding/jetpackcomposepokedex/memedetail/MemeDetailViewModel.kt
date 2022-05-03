@@ -120,7 +120,10 @@ class MemeDetailViewModel @Inject constructor(
 
     @ExperimentalPermissionsApi
     fun updateOrCheckPermissions(permissionsState: MultiplePermissionsState) {
-        permissionsState.permissions.forEach { perm ->
+        if (permissionsState.permissions.all {
+                it.hasPermission
+            }) Log.d("Mesaj", "Bütün permler tamam") else Log.d("Mesaj:", "Tamam değil")
+/*
             when (perm.permission) {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE -> {
                     when {
@@ -154,19 +157,18 @@ class MemeDetailViewModel @Inject constructor(
                         }
                     }
                 }
-            }
-        }
+*/
         permissionsState.launchMultiplePermissionRequest()
     }
+}
 
-    private suspend fun getBitmap(url: String, context: Context): Bitmap {
-        val loader = ImageLoader(context)
-        val request = ImageRequest.Builder(context)
-            .data(url)
-            .allowHardware(false)
-            .build()
+private suspend fun getBitmap(url: String, context: Context): Bitmap {
+    val loader = ImageLoader(context)
+    val request = ImageRequest.Builder(context)
+        .data(url)
+        .allowHardware(false)
+        .build()
 
-        val result = (loader.execute(request) as SuccessResult).drawable
-        return (result as BitmapDrawable).bitmap
-    }
+    val result = (loader.execute(request) as SuccessResult).drawable
+    return (result as BitmapDrawable).bitmap
 }
