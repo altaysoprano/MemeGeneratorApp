@@ -122,41 +122,43 @@ class MemeDetailViewModel @Inject constructor(
     fun updateOrCheckPermissions(permissionsState: MultiplePermissionsState) {
         if (permissionsState.permissions.all {
                 it.hasPermission
-            }) Log.d("Mesaj", "Bütün permler tamam") else Log.d("Mesaj:", "Tamam değil")
+            }) _permissionsCheckState.value = PermissionsCheckState(isPermissionsGranted = true)
+
+        Log.d("Mesaj: ", "${_permissionsCheckState.value.isPermissionsGranted}")
+
 /*
+        permissionsState.permissions.forEach { perm ->
             when (perm.permission) {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE -> {
                     when {
-                        perm.hasPermission -> {
-                            Log.d("Mesaj", "Write permission accepted")
-                        }
                         perm.shouldShowRationale -> {
-                            Log.d("Mesaj", "Write permission is needed")
+                            _permissionsCheckState.value = PermissionsCheckState(
+                                isPermissionsGranted = false
+                            )
                         }
+
                         perm.isPermanentlyDenied() -> {
                             Log.d(
                                 "Mesaj", "Write permission was permanently denied. " +
-                                        "You can enable settings app"
+                                        "You can enable it in the app settings"
                             )
                         }
                     }
                 }
                 Manifest.permission.READ_EXTERNAL_STORAGE -> {
                     when {
-                        perm.hasPermission -> {
-                            Log.d("Mesaj", "Read permission accepted")
-                        }
                         perm.shouldShowRationale -> {
                             Log.d("Mesaj", "Read permission is needed")
                         }
                         perm.isPermanentlyDenied() -> {
                             Log.d(
                                 "Mesaj", "Read permission was permanently denied. " +
-                                        "You can enable settings app"
+                                        "You can enable it in the app settings"
                             )
                         }
                     }
                 }
+            }
 */
         permissionsState.launchMultiplePermissionRequest()
     }
