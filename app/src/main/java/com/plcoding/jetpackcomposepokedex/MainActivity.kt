@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.plcoding.jetpackcomposepokedex.memedetail.MemeDetailScreen
 import com.plcoding.jetpackcomposepokedex.memelist.MemeListScreen
 import com.plcoding.jetpackcomposepokedex.ui.theme.JetpackComposePokedexTheme
@@ -23,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

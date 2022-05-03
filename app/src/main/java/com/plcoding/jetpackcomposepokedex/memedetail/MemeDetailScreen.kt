@@ -1,5 +1,6 @@
 package com.plcoding.jetpackcomposepokedex.memedetail
 
+import android.Manifest
 import android.util.Log
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.*
@@ -23,18 +24,27 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.plcoding.jetpackcomposepokedex.R
 import com.plcoding.jetpackcomposepokedex.data.models.MemeListEntry
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.meme.Meme
 import com.plcoding.jetpackcomposepokedex.data.remote.responses.meme_list.MemeList
 import com.plcoding.jetpackcomposepokedex.util.Resource
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import java.util.*
 
+@ExperimentalPermissionsApi
 @Composable
 fun MemeDetailScreen(
     viewModel: MemeDetailViewModel = hiltViewModel(),
@@ -46,7 +56,15 @@ fun MemeDetailScreen(
     val textList = viewModel.textList
     val memeTextList = viewModel.memeTextList
     val memeInfoState = viewModel.memeInfoState
+    val saveState = viewModel.saveState
     val alertDialogVisible = viewModel.alertDialogVisible
+
+    val permissionsState = rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+    )
 
     LaunchedEffect(key1 = true) {
         viewModel.setMemeTextList(boxCount)
@@ -86,9 +104,14 @@ fun MemeDetailScreen(
             { viewModel.getMemeInfo(textList.value, memeId) },
             { viewModel.onSaveDialogOpen() }
         )
-        if(alertDialogVisible.value) SaveAlertDialog(
-            {viewModel.onSaveDialogDismiss()},
-            {viewModel.onSave()}
+        if (alertDialogVisible.value) SaveAlertDialog(
+            saveState.value,
+            { viewModel.onSaveDialogDismiss() },
+            {
+                viewModel.viewModelScope.launch {
+                    viewModel.updateOrCheckPermissions(permissionsState)
+                }
+            }
         )
     }
 }

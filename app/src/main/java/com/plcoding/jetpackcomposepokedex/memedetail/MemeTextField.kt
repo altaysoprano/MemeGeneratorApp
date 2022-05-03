@@ -1,6 +1,5 @@
 package com.plcoding.jetpackcomposepokedex.memedetail
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +23,7 @@ fun MemeTextField(
 ) {
 
     val textList = viewModel.textList
-    val isTyping = viewModel.isTexting
+    val isTyping = viewModel.isTyping
     val inputService = LocalTextInputService.current
 
     LazyColumn(

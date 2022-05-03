@@ -1,15 +1,19 @@
 package com.plcoding.jetpackcomposepokedex.memedetail
 
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 
 @Composable
 fun SaveAlertDialog(
+    saveState: SaveState,
     onDismiss: () -> Unit,
     onSave: () -> Unit
 ) {
+    if(saveState.isLoading) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colors.primary,
+        )
+    }
     AlertDialog(
         onDismissRequest = { onDismiss() },
         dismissButton = {

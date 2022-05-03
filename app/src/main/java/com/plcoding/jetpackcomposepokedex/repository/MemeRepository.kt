@@ -27,7 +27,7 @@ class MemeRepository @Inject constructor(
         return Resource.Success(response)
     }
 
-     fun getMemeInfo(textList: List<String>, memeId: String): Flow<Resource<Meme>> = flow {
+    fun getMemeInfo(textList: List<String>, memeId: String): Flow<Resource<Meme>> = flow {
         try {
             emit(Resource.Loading<Meme>())
             val response = api.getMemeDetail(
