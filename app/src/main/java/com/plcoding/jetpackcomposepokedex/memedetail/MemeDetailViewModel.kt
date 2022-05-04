@@ -119,47 +119,17 @@ class MemeDetailViewModel @Inject constructor(
     }
 
     @ExperimentalPermissionsApi
+    fun onSave(permissionsState: MultiplePermissionsState) {
+        updateOrCheckPermissions(permissionsState)
+    }
+
+    @ExperimentalPermissionsApi
     fun updateOrCheckPermissions(permissionsState: MultiplePermissionsState) {
         if (permissionsState.permissions.all {
                 it.hasPermission
-            }) _permissionsCheckState.value = PermissionsCheckState(isPermissionsGranted = true)
-
-        Log.d("Mesaj: ", "${_permissionsCheckState.value.isPermissionsGranted}")
-
-/*
-        permissionsState.permissions.forEach { perm ->
-            when (perm.permission) {
-                Manifest.permission.WRITE_EXTERNAL_STORAGE -> {
-                    when {
-                        perm.shouldShowRationale -> {
-                            _permissionsCheckState.value = PermissionsCheckState(
-                                isPermissionsGranted = false
-                            )
-                        }
-
-                        perm.isPermanentlyDenied() -> {
-                            Log.d(
-                                "Mesaj", "Write permission was permanently denied. " +
-                                        "You can enable it in the app settings"
-                            )
-                        }
-                    }
-                }
-                Manifest.permission.READ_EXTERNAL_STORAGE -> {
-                    when {
-                        perm.shouldShowRationale -> {
-                            Log.d("Mesaj", "Read permission is needed")
-                        }
-                        perm.isPermanentlyDenied() -> {
-                            Log.d(
-                                "Mesaj", "Read permission was permanently denied. " +
-                                        "You can enable it in the app settings"
-                            )
-                        }
-                    }
-                }
-            }
-*/
+            }) {
+            _permissionsCheckState.value = PermissionsCheckState(isPermissionsGranted = true)
+        }
         permissionsState.launchMultiplePermissionRequest()
     }
 }

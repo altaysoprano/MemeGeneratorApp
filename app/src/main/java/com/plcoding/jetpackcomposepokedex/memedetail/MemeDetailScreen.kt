@@ -109,7 +109,7 @@ fun MemeDetailScreen(
             { viewModel.onSaveDialogDismiss() },
             {
                 viewModel.viewModelScope.launch {
-                    viewModel.updateOrCheckPermissions(permissionsState)
+                    viewModel.onSave(permissionsState)
                 }
             }
         )
