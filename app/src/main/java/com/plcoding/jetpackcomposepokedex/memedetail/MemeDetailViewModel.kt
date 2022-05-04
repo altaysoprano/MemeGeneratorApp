@@ -64,9 +64,7 @@ class MemeDetailViewModel @Inject constructor(
     val isTyping: MutableState<Boolean> = mutableStateOf(false)
     val alertDialogVisible: MutableState<Boolean> = mutableStateOf(false)
 
-    private val _permissionsCheckState: MutableState<PermissionsCheckState> =
-        mutableStateOf(PermissionsCheckState())
-    val permissionsCheckState: MutableState<PermissionsCheckState> = _permissionsCheckState
+    private var isPermissionsGranted = false
 
     fun getMemeInfo(textList: MutableList<String>, id: String) {
         val newList = mutableListOf<String>()
@@ -119,8 +117,12 @@ class MemeDetailViewModel @Inject constructor(
     }
 
     @ExperimentalPermissionsApi
-    fun onSave(permissionsState: MultiplePermissionsState) {
+    suspend fun onSave(permissionsState: MultiplePermissionsState, context: Context, url: String?) {
         updateOrCheckPermissions(permissionsState)
+        if(isPermissionsGranted) {
+            val bitmap = getBitmap(url, context)
+            saveBitmapAsImageToDevice(bitmap, context)
+        }
     }
 
     @ExperimentalPermissionsApi
@@ -128,19 +130,57 @@ class MemeDetailViewModel @Inject constructor(
         if (permissionsState.permissions.all {
                 it.hasPermission
             }) {
-            _permissionsCheckState.value = PermissionsCheckState(isPermissionsGranted = true)
+            isPermissionsGranted = true
         }
         permissionsState.launchMultiplePermissionRequest()
     }
+
+    private fun saveBitmapAsImageToDevice(bitmap: Bitmap?, context: Context) {
+        // Add a specific media item.
+        val resolver = context.contentResolver
+
+        val imageStorageAddress = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } else {
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        }
+
+        val imageDetails = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "my_app_${System.currentTimeMillis()}.jpg")
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(MediaStore.MediaColumns.DATE_ADDED, System.currentTimeMillis())
+        }
+
+        try {
+            // Save the image.
+            val contentUri: Uri? = resolver.insert(imageStorageAddress, imageDetails)
+            contentUri?.let { uri ->
+                // Don't leave an orphan entry in the MediaStore
+                if (bitmap == null) resolver.delete(contentUri, null, null)
+                val outputStream: OutputStream? = resolver.openOutputStream(uri)
+                outputStream?.let { outStream ->
+                    val isBitmapCompressed =
+                        bitmap?.compress(Bitmap.CompressFormat.JPEG, 95, outStream)
+                    if (isBitmapCompressed == true) {
+                        outStream.flush()
+                        outStream.close()
+                    }
+                } ?: throw IOException("Failed to get output stream.")
+            } ?: throw IOException("Failed to create new MediaStore record.")
+        } catch (e: IOException) {
+            throw e
+        }
+    }
+
+    private suspend fun getBitmap(url: String?, context: Context): Bitmap {
+        val loader = ImageLoader(context)
+        val request = ImageRequest.Builder(context)
+            .data(url)
+            .allowHardware(false)
+            .build()
+
+        val result = (loader.execute(request) as SuccessResult).drawable
+        return (result as BitmapDrawable).bitmap
+    }
 }
 
-private suspend fun getBitmap(url: String, context: Context): Bitmap {
-    val loader = ImageLoader(context)
-    val request = ImageRequest.Builder(context)
-        .data(url)
-        .allowHardware(false)
-        .build()
-
-    val result = (loader.execute(request) as SuccessResult).drawable
-    return (result as BitmapDrawable).bitmap
-}

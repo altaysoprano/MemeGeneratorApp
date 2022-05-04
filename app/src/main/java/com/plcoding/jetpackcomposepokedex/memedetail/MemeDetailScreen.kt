@@ -58,6 +58,7 @@ fun MemeDetailScreen(
     val memeInfoState = viewModel.memeInfoState
     val saveState = viewModel.saveState
     val alertDialogVisible = viewModel.alertDialogVisible
+    val context = LocalContext.current
 
     val permissionsState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -109,7 +110,7 @@ fun MemeDetailScreen(
             { viewModel.onSaveDialogDismiss() },
             {
                 viewModel.viewModelScope.launch {
-                    viewModel.onSave(permissionsState)
+                    viewModel.onSave(permissionsState, context, memeInfoState.value.data?.data?.url)
                 }
             }
         )
