@@ -122,6 +122,7 @@ class MemeDetailViewModel @Inject constructor(
         if(isPermissionsGranted) {
             val bitmap = getBitmap(url, context)
             saveBitmapAsImageToDevice(bitmap, context)
+            alertDialogVisible.value = false
         }
     }
 
