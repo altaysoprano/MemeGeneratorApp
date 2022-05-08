@@ -76,7 +76,10 @@ fun MemeDetailScreen(
         }
     }
 
-    Scaffold(scaffoldState = scaffoldState) {
+    Scaffold(
+        scaffoldState = scaffoldState,
+        backgroundColor = Color.Transparent
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

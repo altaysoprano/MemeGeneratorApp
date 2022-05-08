@@ -171,7 +171,7 @@ class MemeDetailViewModel @Inject constructor(
                 } ?: throw IOException("Failed to create new MediaStore record.")
                 _snackBarFlow.emit(SnackbarEvent.ShowPhotoSavedGallerySnackbar("Meme Saved in Gallery"))
             } catch (e: IOException) {
-                _snackBarFlow.emit(SnackbarEvent.SomeErrorWhenSavingSnackbar("Failed to load meme. Please try again."))
+                _snackBarFlow.emit(SnackbarEvent.SomeErrorWhenSavingSnackbar("Failed to save meme. Please try again."))
             }
         }
     }
