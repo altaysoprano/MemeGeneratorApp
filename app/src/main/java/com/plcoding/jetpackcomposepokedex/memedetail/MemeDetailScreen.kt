@@ -110,7 +110,7 @@ fun MemeDetailScreen(
             Spacer(modifier = Modifier.height(8.dp))
             DetailScreenButton(
                 { viewModel.getMemeInfo(textList.value, memeId) },
-                { viewModel.onSaveDialogOpen() }
+                { viewModel.onSaveDialogOpen(memeId) }
             )
             if (alertDialogVisible.value) SaveAlertDialog(
                 { viewModel.onSaveDialogDismiss() },

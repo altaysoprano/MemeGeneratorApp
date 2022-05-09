@@ -95,7 +95,8 @@ class MemeDetailViewModel @Inject constructor(
         _memeTextList.value = list
     }
 
-    fun onSaveDialogOpen() {
+    fun onSaveDialogOpen(memeId: String) {
+        getMemeInfo(textList.value, memeId)
         alertDialogVisible.value = true
     }
 
