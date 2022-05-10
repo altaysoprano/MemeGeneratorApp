@@ -2,6 +2,7 @@ package com.plcoding.jetpackcomposepokedex.memedetail
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -9,6 +10,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.*
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
@@ -187,5 +189,16 @@ class MemeDetailViewModel @Inject constructor(
         val result = (loader.execute(request) as SuccessResult).drawable
         return (result as BitmapDrawable).bitmap
     }
+
+/*
+    suspend fun onShare(url: String?, context: Context) {
+        val bitmap = getBitmap(url, context)
+        val intent = Intent()
+        intent.action = Intent.ACTION_SEND
+        intent.putExtra("BitmapImage", bitmap)
+
+        startActivity(context, Intent.createChooser(intent, "Share to: "), null)
+    }
+*/
 }
 
