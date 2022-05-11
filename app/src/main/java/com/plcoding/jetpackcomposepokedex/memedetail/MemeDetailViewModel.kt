@@ -23,6 +23,7 @@ import com.plcoding.jetpackcomposepokedex.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import javax.inject.Inject
@@ -137,8 +138,9 @@ class MemeDetailViewModel @Inject constructor(
     }
 
     private fun saveBitmapAsImageToDevice(bitmap: Bitmap?, context: Context) {
-        // Add a specific media item.
+
         viewModelScope.launch {
+            // Add a specific media item.
             val resolver = context.contentResolver
 
             val imageStorageAddress = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -150,7 +152,7 @@ class MemeDetailViewModel @Inject constructor(
             val imageDetails = ContentValues().apply {
                 put(
                     MediaStore.Images.Media.DISPLAY_NAME,
-                    "my_app_${System.currentTimeMillis()}.jpg"
+                    "meme_generator_${System.currentTimeMillis()}.jpg"
                 )
                 put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
                 put(MediaStore.MediaColumns.DATE_ADDED, System.currentTimeMillis())
@@ -200,5 +202,25 @@ class MemeDetailViewModel @Inject constructor(
         startActivity(context, Intent.createChooser(intent, "Share to: "), null)
     }
 */
+
+    suspend fun onShare(url: String?, context: Context) {
+        val bitmap = getBitmap(url, context)
+
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, getURIFromBitmap(context, bitmap))
+            type = "image/*"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, "Share to: ")
+        context.startActivity(shareIntent)
+    }
+
+    fun getURIFromBitmap(context: Context, bitmap: Bitmap): Uri {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(context.contentResolver,
+            bitmap, "meme_generator_${System.currentTimeMillis()}.jpg", null)
+        return Uri.parse(path)
+    }
 }
 

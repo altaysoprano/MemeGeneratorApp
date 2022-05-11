@@ -124,12 +124,10 @@ fun MemeDetailScreen(
                     }
                 },
                 { viewModel.viewModelScope.launch {
-/*
                     viewModel.onShare(
                         memeInfoState.value.data?.data?.url,
                         context
                     )
-*/
                 }}
             )
         }
