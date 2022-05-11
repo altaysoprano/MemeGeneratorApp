@@ -192,27 +192,22 @@ class MemeDetailViewModel @Inject constructor(
         return (result as BitmapDrawable).bitmap
     }
 
-/*
-    suspend fun onShare(url: String?, context: Context) {
-        val bitmap = getBitmap(url, context)
-        val intent = Intent()
-        intent.action = Intent.ACTION_SEND
-        intent.putExtra("BitmapImage", bitmap)
+    @ExperimentalPermissionsApi
+    suspend fun onShare(
+        url: String?, context: Context, permissionsState: MultiplePermissionsState
+    ) {
+        updateOrCheckPermissions(permissionsState)
 
-        startActivity(context, Intent.createChooser(intent, "Share to: "), null)
-    }
-*/
-
-    suspend fun onShare(url: String?, context: Context) {
-        val bitmap = getBitmap(url, context)
-
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, getURIFromBitmap(context, bitmap))
-            type = "image/*"
+        if (isPermissionsGranted) {
+            val bitmap = getBitmap(url, context)
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, getURIFromBitmap(context, bitmap))
+                type = "image/*"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, "Share to: ")
+            context.startActivity(shareIntent)
         }
-        val shareIntent = Intent.createChooser(sendIntent, "Share to: ")
-        context.startActivity(shareIntent)
     }
 
     fun getURIFromBitmap(context: Context, bitmap: Bitmap): Uri {
