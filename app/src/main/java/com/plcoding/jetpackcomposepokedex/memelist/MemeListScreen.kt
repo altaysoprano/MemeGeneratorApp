@@ -74,8 +74,8 @@ fun SearchBar(
 
     val isFocused by viewModel.isFocused
 
-    Box(modifier = modifier ) {
-        BasicTextField(
+    Box(modifier = modifier) {
+        TextField(
             value = searchText,
             onValueChange = {
                 viewModel.updateText(it)
@@ -88,20 +88,26 @@ fun SearchBar(
                 .fillMaxWidth()
                 .shadow(5.dp, CircleShape)
                 .background(Color.White, CircleShape)
-                .padding(horizontal = 20.dp, vertical = 12.dp)
                 .onFocusChanged {
                     viewModel.updateFocused(it.isFocused && searchText.isEmpty())
-                }
+                },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.White,
+                textColor = Color.Black,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            placeholder = {
+                Text(
+                    text = hint,
+                    color = Color.LightGray
+                )
+            }
         )
-        if(!isFocused) {
+        if (!isFocused) {
             viewModel.updateText("")
             viewModel.searchMemeList(searchText)
-            Text(
-                text = hint,
-                color = Color.LightGray,
-                modifier = Modifier
-                    .padding(horizontal = 20.dp, vertical = 12.dp)
-            )
         }
     }
 }
@@ -124,28 +130,33 @@ fun MemeEntry(
             }
         ) {
             Image(
-                painter = rememberCoilPainter(request = ImageRequest.Builder(LocalContext.current)
-                    .data(entry.imageUrl)
-                    .build()),
+                painter = rememberCoilPainter(
+                    request = ImageRequest.Builder(LocalContext.current)
+                        .data(entry.imageUrl)
+                        .build()
+                ),
                 contentDescription = entry.memeName,
                 contentScale = ContentScale.Crop
             )
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black
-                        ),
-                        startY = 300f
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black
+                            ),
+                            startY = 300f
+                        )
                     )
-                )
             )
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            contentAlignment = Alignment.BottomStart) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp),
+                contentAlignment = Alignment.BottomStart
+            ) {
                 Text(entry.memeName, style = TextStyle(color = Color.White, fontSize = 16.sp))
             }
         }
@@ -162,7 +173,7 @@ fun MemeList(
     Log.d("Mesaj: ", "memeliststate size in memelistscreen: ${memeListState.data!!.size}")
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
-        val itemCount = if(memeListState.data!!.size % 2 == 0) {
+        val itemCount = if (memeListState.data!!.size % 2 == 0) {
             memeListState.data!!.size / 2
         } else {
             memeListState.data!!.size / 2 + 1
@@ -172,7 +183,7 @@ fun MemeList(
         }
     }
 
-    if(memeListState.isLoading) {
+    if (memeListState.isLoading) {
         Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressIndicator(
                 color = MaterialTheme.colors.primary,
@@ -196,13 +207,13 @@ fun MemeRow(
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            if(entries.size >= rowIndex * 2 + 2) {
+            if (entries.size >= rowIndex * 2 + 2) {
                 MemeEntry(
                     entry = entries[rowIndex * 2 + 1],
                     navController = navController,
                     modifier = Modifier.weight(1f)
                 )
-            }else {
+            } else {
                 Spacer(modifier = Modifier.weight(1f))
             }
         }

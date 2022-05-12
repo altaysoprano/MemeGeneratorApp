@@ -23,8 +23,6 @@ fun MemeTextField(
 ) {
 
     val textList = viewModel.textList
-    val isTyping = viewModel.isTyping
-    val inputService = LocalTextInputService.current
 
     LazyColumn(
         modifier = Modifier.fillMaxHeight(0.7f)
