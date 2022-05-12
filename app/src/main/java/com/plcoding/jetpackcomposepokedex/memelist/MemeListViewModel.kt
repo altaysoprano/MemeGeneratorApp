@@ -26,10 +26,6 @@ class MemeListViewModel @Inject constructor(
     private val repository: MemeRepository
 ) : ViewModel() {
 
-    var memeList = mutableStateOf<List<MemeListEntry>>(listOf())
-    var loadError = mutableStateOf("")
-    var isLoading = mutableStateOf(false)
-
     private val _memeListState: MutableState<MemeListState> = mutableStateOf(MemeListState())
     val memeListState: MutableState<MemeListState> = _memeListState
 
@@ -50,7 +46,7 @@ class MemeListViewModel @Inject constructor(
             val result = searchedList.filter {
                 it.memeName.contains(query.trim(), ignoreCase = true)
             }
-            _memeListState.value.data = result
+            _memeListState.value = MemeListState(data = result)
         }
     }
 

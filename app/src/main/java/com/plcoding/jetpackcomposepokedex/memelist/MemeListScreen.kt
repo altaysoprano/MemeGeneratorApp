@@ -157,16 +157,27 @@ fun MemeList(
     navController: NavController,
     viewModel: MemeListViewModel = hiltViewModel()
 ) {
-    val memeList by viewModel.memeList
+    val memeListState by viewModel.memeListState
+
+    Log.d("Mesaj: ", "memeliststate size in memelistscreen: ${memeListState.data!!.size}")
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
-        val itemCount = if(memeList.size % 2 == 0) {
-            memeList.size / 2
+        val itemCount = if(memeListState.data!!.size % 2 == 0) {
+            memeListState.data!!.size / 2
         } else {
-            memeList.size / 2 + 1
+            memeListState.data!!.size / 2 + 1
         }
         items(itemCount) {
-            MemeRow(rowIndex = it, entries = memeList, navController = navController)
+            MemeRow(rowIndex = it, entries = memeListState.data!!, navController = navController)
+        }
+    }
+
+    if(memeListState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.primary,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
