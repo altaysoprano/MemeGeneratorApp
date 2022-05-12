@@ -11,7 +11,8 @@ import androidx.compose.ui.unit.dp
 fun SaveAlertDialog(
     onDismiss: () -> Unit,
     onSave: () -> Unit,
-    onShare: () -> Unit
+    onShare: () -> Unit,
+    isLoading: Boolean
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -19,25 +20,34 @@ fun SaveAlertDialog(
             Button(
                 onClick = { onShare() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
-                modifier = Modifier.fillMaxSize().padding(vertical = 8.dp),
-                contentPadding = PaddingValues(vertical = 12.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 8.dp),
+                contentPadding = PaddingValues(vertical = 12.dp),
+                enabled = !isLoading
             ) {
                 Text(text = "Share")
             }
+
         },
         confirmButton = {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Button(
                     onClick = { onDismiss() },
-                    modifier = Modifier.fillMaxSize(0.5f).padding(horizontal = 4.dp, vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxSize(0.5f)
+                        .padding(horizontal = 4.dp, vertical = 8.dp),
                     contentPadding = PaddingValues(vertical = 12.dp)
                 ) {
                     Text(text = "Cancel")
                 }
                 Button(
                     onClick = { onSave() },
-                    modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 8.dp),
-                    contentPadding = PaddingValues(vertical = 12.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 4.dp, vertical = 8.dp),
+                    contentPadding = PaddingValues(vertical = 12.dp),
+                    enabled = !isLoading
                 ) {
                     Text(text = "SAVE")
                 }

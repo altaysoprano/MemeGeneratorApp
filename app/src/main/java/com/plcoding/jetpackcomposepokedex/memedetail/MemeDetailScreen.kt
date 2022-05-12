@@ -127,9 +127,10 @@ fun MemeDetailScreen(
                     viewModel.onShare(
                         memeInfoState.value.data?.data?.url,
                         context,
-                        permissionsState
+                        permissionsState,
                     )
-                }}
+                }},
+                memeInfoState.value.isLoading
             )
         }
     }
