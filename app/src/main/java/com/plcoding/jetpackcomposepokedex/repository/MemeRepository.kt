@@ -18,6 +18,7 @@ class MemeRepository @Inject constructor(
     private val api: MemeApi
 ) {
 
+/*
     suspend fun getMemeList(): Resource<MemeList> {
         val response = try {
             api.getMemeList()
@@ -25,6 +26,17 @@ class MemeRepository @Inject constructor(
             return Resource.Error("An unknown error occured.")
         }
         return Resource.Success(response)
+    }
+*/
+
+    fun getMemeList(): Flow<Resource<MemeList>> = flow {
+        try {
+            emit(Resource.Loading<MemeList>())
+            val response = api.getMemeList()
+            emit(Resource.Success<MemeList>(data = response))
+        } catch (e: IOException) {
+            emit(Resource.Error<MemeList>("An unknown error occured."))
+        }
     }
 
     fun getMemeInfo(textList: List<String>, memeId: String): Flow<Resource<Meme>> = flow {
