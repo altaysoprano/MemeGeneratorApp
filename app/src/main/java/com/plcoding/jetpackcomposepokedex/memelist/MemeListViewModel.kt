@@ -46,7 +46,7 @@ class MemeListViewModel @Inject constructor(
             val result = searchedList.filter {
                 it.memeName.contains(query.trim(), ignoreCase = true)
             }
-            _memeListState.value = MemeListState(data = result)
+            _memeListState.value = memeListState.value.copy(data = result)
         }
     }
 
@@ -86,6 +86,7 @@ class MemeListViewModel @Inject constructor(
             when(result) {
                 is Resource.Loading -> {
                     _memeListState.value = MemeListState(isLoading = true)
+                    Log.d("Mesaj", "${_memeListState.value.isLoading}")
                 }
                 is Resource.Success -> {
                     searchedList = result.data?.data?.memes?.map { it.memeToMemeListEntry() }!!

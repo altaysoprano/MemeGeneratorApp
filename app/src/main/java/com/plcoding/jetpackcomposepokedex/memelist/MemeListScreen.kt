@@ -187,8 +187,6 @@ fun MemeList(
 ) {
     val memeListState by viewModel.memeListState
 
-    Log.d("Mesaj: ", "memeliststate size in memelistscreen: ${memeListState.data!!.size}")
-
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
         val itemCount = if (memeListState.data!!.size % 2 == 0) {
             memeListState.data!!.size / 2
@@ -204,7 +202,7 @@ fun MemeList(
         Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressIndicator(
                 color = MaterialTheme.colors.primary,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Center)
             )
         }
     }
