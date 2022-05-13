@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomStart
@@ -103,6 +105,21 @@ fun SearchBar(
                     text = hint,
                     color = Color.LightGray
                 )
+            },
+            trailingIcon = {
+                if (searchText.isNotBlank()) {
+                    IconButton(onClick = {
+                        viewModel.updateText("")
+                        viewModel.searchMemeList(searchText)
+                    }) {
+                        Icon(
+                            Icons.Default.Clear,
+                            contentDescription = "Clear",
+                            modifier = Modifier.size(ButtonDefaults.IconSize),
+                            tint = MaterialTheme.colors.onBackground
+                        )
+                    }
+                }
             }
         )
         if (!isFocused) {
