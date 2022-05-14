@@ -34,8 +34,11 @@ class MemeRepository @Inject constructor(
             emit(Resource.Loading<MemeList>())
             val response = api.getMemeList()
             emit(Resource.Success<MemeList>(data = response))
-        } catch (e: IOException) {
+        }         catch (e: HttpException) {
             emit(Resource.Error<MemeList>("An unknown error occured."))
+        }
+        catch (e: IOException) {
+            emit(Resource.Error<MemeList>("Please check your internet connection."))
         }
     }
 

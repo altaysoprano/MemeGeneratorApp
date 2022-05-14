@@ -2,6 +2,7 @@ package com.plcoding.jetpackcomposepokedex.memedetail
 
 import android.Manifest
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -12,8 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,6 +42,7 @@ fun MemeDetailScreen(
     val memeInfoState = viewModel.memeInfoState
     val alertDialogVisible = viewModel.alertDialogVisible
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     val scaffoldState = rememberScaffoldState()
 
     val permissionsState = rememberMultiplePermissionsState(
@@ -91,6 +95,13 @@ fun MemeDetailScreen(
                         )
                     )
                 )
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            focusManager.clearFocus()
+                        }
+                    )
+                }
         ) {
             MemeDetailTopSection(navController = navController)
             Spacer(modifier = Modifier.height(16.dp))
@@ -123,13 +134,15 @@ fun MemeDetailScreen(
                         )
                     }
                 },
-                { viewModel.viewModelScope.launch {
-                    viewModel.onShare(
-                        memeInfoState.value.data?.data?.url,
-                        context,
-                        permissionsState,
-                    )
-                }},
+                {
+                    viewModel.viewModelScope.launch {
+                        viewModel.onShare(
+                            memeInfoState.value.data?.data?.url,
+                            context,
+                            permissionsState,
+                        )
+                    }
+                },
                 memeInfoState.value.isLoading
             )
         }

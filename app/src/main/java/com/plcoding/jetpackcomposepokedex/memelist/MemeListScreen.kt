@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -12,6 +13,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Preview
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomStart
@@ -21,13 +24,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.request.ImageRequest
 import com.google.accompanist.coil.rememberCoilPainter
+import com.plcoding.jetpackcomposepokedex.R
 import com.plcoding.jetpackcomposepokedex.data.models.MemeListEntry
 import com.plcoding.jetpackcomposepokedex.ui.theme.RobotoCondensed
 
@@ -43,11 +51,22 @@ fun MemeListScreen(
     navController: NavController,
     viewModel: MemeListViewModel = hiltViewModel()
 ) {
+
+    val focusManager = LocalFocusManager.current
+
     Surface(
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize()
     ) {
-        Column {
+        Column(
+            modifier = Modifier.pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        focusManager.clearFocus()
+                    }
+                )
+            }
+        ) {
             Spacer(modifier = Modifier.height(20.dp))
             SearchBar(
                 hint = "Search Meme...",
@@ -73,10 +92,11 @@ fun SearchBar(
 ) {
 
     val searchText by viewModel.searchText
-
     val isFocused by viewModel.isFocused
 
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier
+    ) {
         TextField(
             value = searchText,
             onValueChange = {
@@ -197,13 +217,47 @@ fun MemeList(
             MemeRow(rowIndex = it, entries = memeListState.data!!, navController = navController)
         }
     }
-
     if (memeListState.isLoading) {
         Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressIndicator(
                 color = MaterialTheme.colors.primary,
                 modifier = Modifier.align(Center)
             )
+        }
+    }
+    if (memeListState.error.isNotBlank()) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Center) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Image(
+                    painter = painterResource(id = R.drawable.wifi_off),
+                    contentDescription = "No internet connection",
+                    modifier = Modifier.fillMaxSize(0.25f)
+                )
+                Text(text = "No internet connection", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                Text(
+                    text = "No internet connection found. Check your internet",
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp)
+                )
+                Text(text = "connection or try again.", fontSize = 16.sp)
+                Button(
+                    onClick = { viewModel.loadMemeList() },
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
+                    elevation = ButtonDefaults.elevation(4.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Refresh,
+                        contentDescription = "Try Again",
+                        modifier = Modifier.size(ButtonDefaults.IconSize),
+                        tint = MaterialTheme.colors.onBackground
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text ="Try Again", color = MaterialTheme.colors.onBackground)
+                }
+            }
         }
     }
 }

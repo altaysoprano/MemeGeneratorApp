@@ -81,12 +81,11 @@ class MemeListViewModel @Inject constructor(
     }
 */
 
-    private fun loadMemeList() {
+    fun loadMemeList() {
         repository.getMemeList().onEach { result ->
             when(result) {
                 is Resource.Loading -> {
                     _memeListState.value = MemeListState(isLoading = true)
-                    Log.d("Mesaj", "${_memeListState.value.isLoading}")
                 }
                 is Resource.Success -> {
                     searchedList = result.data?.data?.memes?.map { it.memeToMemeListEntry() }!!
