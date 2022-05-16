@@ -99,52 +99,12 @@ fun MemeDetailScreen(
                     navController = navController,
                     memeInfo = memeInfoState.value,
                     boxCount = boxCount,
-                    { viewModel.getMemeInfo(textList.value, memeId) },
-                    { viewModel.onSaveDialogOpen(memeId) }
+                    onPreviewClick = { viewModel.getMemeInfo(textList.value, memeId) },
+                    onSaveClick = { viewModel.onSaveDialogOpen(memeId) }
                 )
             }
         }
-/*
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            MaterialTheme.colors.background,
-                            Color.Transparent
-                        )
-                    )
-                )
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onTap = {
-                            focusManager.clearFocus()
-                        }
-                    )
-                }
-        ) {
-            MemeDetailTopSection(navController = navController)
-            Spacer(modifier = Modifier.height(16.dp))
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.6f),
-                contentAlignment = Alignment.Center
-            ) {
-                MemeDetailStateWrapper(
-                    memeInfo = memeInfoState.value
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            MemeTextField(boxCount = boxCount)
-            Spacer(modifier = Modifier.height(8.dp))
-            DetailScreenButton(
-                { viewModel.getMemeInfo(textList.value, memeId) },
-                { viewModel.onSaveDialogOpen(memeId) }
-            )
-*/
+
         if (alertDialogVisible.value) SaveAlertDialog(
             { viewModel.onSaveDialogDismiss() },
             {
