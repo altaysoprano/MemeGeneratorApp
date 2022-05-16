@@ -1,8 +1,8 @@
 package com.plcoding.jetpackcomposepokedex.memedetail
 
 import android.Manifest
+import android.content.res.Configuration
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,10 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,7 +41,6 @@ fun MemeDetailScreen(
     val memeInfoState = viewModel.memeInfoState
     val alertDialogVisible = viewModel.alertDialogVisible
     val context = LocalContext.current
-    val focusManager = LocalFocusManager.current
     val scaffoldState = rememberScaffoldState()
 
     val permissionsState = rememberMultiplePermissionsState(
@@ -84,6 +82,29 @@ fun MemeDetailScreen(
         scaffoldState = scaffoldState,
         backgroundColor = Color.Transparent
     ) {
+        val configuration = LocalConfiguration.current
+
+        when (configuration.orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> {
+                MemeDetailScreenLandscape(
+                    navController = navController,
+                    memeInfo = memeInfoState.value,
+                    boxCount = boxCount,
+                    onPreviewClick = { viewModel.getMemeInfo(textList.value, memeId) },
+                    onSaveClick = { viewModel.onSaveDialogOpen(memeId) }
+                    )
+            }
+            else -> {
+                MemeDetailScreenPortrait(
+                    navController = navController,
+                    memeInfo = memeInfoState.value,
+                    boxCount = boxCount,
+                    { viewModel.getMemeInfo(textList.value, memeId) },
+                    { viewModel.onSaveDialogOpen(memeId) }
+                )
+            }
+        }
+/*
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -123,31 +144,32 @@ fun MemeDetailScreen(
                 { viewModel.getMemeInfo(textList.value, memeId) },
                 { viewModel.onSaveDialogOpen(memeId) }
             )
-            if (alertDialogVisible.value) SaveAlertDialog(
-                { viewModel.onSaveDialogDismiss() },
-                {
-                    viewModel.viewModelScope.launch {
-                        viewModel.onSave(
-                            permissionsState,
-                            context,
-                            memeInfoState.value.data?.data?.url
-                        )
-                    }
-                },
-                {
-                    viewModel.viewModelScope.launch {
-                        viewModel.onShare(
-                            memeInfoState.value.data?.data?.url,
-                            context,
-                            permissionsState,
-                        )
-                    }
-                },
-                memeInfoState.value.isLoading
-            )
-        }
+*/
+        if (alertDialogVisible.value) SaveAlertDialog(
+            { viewModel.onSaveDialogDismiss() },
+            {
+                viewModel.viewModelScope.launch {
+                    viewModel.onSave(
+                        permissionsState,
+                        context,
+                        memeInfoState.value.data?.data?.url
+                    )
+                }
+            },
+            {
+                viewModel.viewModelScope.launch {
+                    viewModel.onShare(
+                        memeInfoState.value.data?.data?.url,
+                        context,
+                        permissionsState,
+                    )
+                }
+            },
+            memeInfoState.value.isLoading
+        )
     }
 }
+
 
 @Composable
 fun MemeDetailTopSection(
