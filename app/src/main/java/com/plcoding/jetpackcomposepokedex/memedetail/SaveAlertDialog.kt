@@ -12,7 +12,8 @@ fun SaveAlertDialog(
     onDismiss: () -> Unit,
     onSave: () -> Unit,
     onShare: () -> Unit,
-    isLoading: Boolean
+    isLoading: Boolean,
+    isFailed: Boolean
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -24,11 +25,10 @@ fun SaveAlertDialog(
                     .fillMaxSize()
                     .padding(vertical = 8.dp),
                 contentPadding = PaddingValues(vertical = 12.dp),
-                enabled = !isLoading
+                enabled = !isLoading && !isFailed
             ) {
                 Text(text = "Share")
             }
-
         },
         confirmButton = {
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -47,7 +47,7 @@ fun SaveAlertDialog(
                         .fillMaxSize()
                         .padding(horizontal = 4.dp, vertical = 8.dp),
                     contentPadding = PaddingValues(vertical = 12.dp),
-                    enabled = !isLoading
+                    enabled = !isLoading && !isFailed
                 ) {
                     Text(text = "SAVE")
                 }

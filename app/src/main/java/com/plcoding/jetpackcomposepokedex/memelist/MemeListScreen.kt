@@ -45,6 +45,7 @@ import com.google.accompanist.coil.rememberCoilPainter
 import com.plcoding.jetpackcomposepokedex.R
 import com.plcoding.jetpackcomposepokedex.data.models.MemeListEntry
 import com.plcoding.jetpackcomposepokedex.ui.theme.RobotoCondensed
+import com.plcoding.jetpackcomposepokedex.util.Constants
 
 @Composable
 fun MemeListScreen(
@@ -226,39 +227,14 @@ fun MemeList(
         }
     }
     if (memeListState.error.isNotBlank()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Center) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    painter = painterResource(id = R.drawable.wifi_off),
-                    contentDescription = "No internet connection",
-                    modifier = Modifier.fillMaxSize(0.25f)
-                )
-                Text(text = "No internet connection", fontWeight = FontWeight.Bold, fontSize = 24.sp)
-                Text(
-                    text = "No internet connection found. Check your internet",
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp)
-                )
-                Text(text = "connection or try again.", fontSize = 16.sp)
-                Button(
-                    onClick = { viewModel.loadMemeList() },
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
-                    elevation = ButtonDefaults.elevation(4.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Refresh,
-                        contentDescription = "Try Again",
-                        modifier = Modifier.size(ButtonDefaults.IconSize),
-                        tint = MaterialTheme.colors.onBackground
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text ="Try Again", color = MaterialTheme.colors.onBackground)
-                }
-            }
-        }
+        NoConnectionScreen(
+            {viewModel.loadMemeList()},
+            Constants.NO_INTERNET_CONNECTION,
+            24,
+            16,
+            R.drawable.wifi_off,
+            Constants.TRY_AGAIN,
+        )
     }
 }
 

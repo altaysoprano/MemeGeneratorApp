@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -24,9 +25,13 @@ import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.plcoding.jetpackcomposepokedex.R
+import com.plcoding.jetpackcomposepokedex.memelist.NoConnectionScreen
+import com.plcoding.jetpackcomposepokedex.util.Constants
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@ExperimentalComposeUiApi
 @ExperimentalPermissionsApi
 @Composable
 fun MemeDetailScreen(
@@ -83,17 +88,21 @@ fun MemeDetailScreen(
                     navController = navController,
                     memeInfo = memeInfoState.value,
                     boxCount = boxCount,
+                    onTryAgain = {},
                     onPreviewClick = { viewModel.getMemeInfo(textList.value, memeId) },
-                    onSaveClick = { viewModel.onSaveDialogOpen(memeId) }
-                    )
+                    onSaveClick = { viewModel.onSaveDialogOpen(memeId) },
+                    isFailed = memeInfoState.value.error.isNotBlank()
+                )
             }
             else -> {
                 MemeDetailScreenPortrait(
                     navController = navController,
                     memeInfo = memeInfoState.value,
                     boxCount = boxCount,
+                    onTryAgain = {},
                     onPreviewClick = { viewModel.getMemeInfo(textList.value, memeId) },
-                    onSaveClick = { viewModel.onSaveDialogOpen(memeId) }
+                    onSaveClick = { viewModel.onSaveDialogOpen(memeId) },
+                    isFailed = memeInfoState.value.error.isNotBlank()
                 )
             }
         }
@@ -118,7 +127,8 @@ fun MemeDetailScreen(
                     )
                 }
             },
-            memeInfoState.value.isLoading
+            memeInfoState.value.isLoading,
+            memeInfoState.value.error.isNotBlank()
         )
     }
 }
@@ -165,7 +175,7 @@ fun MemeDetailTopSection(
 @Composable
 fun MemeDetailStateWrapper(
     memeInfo: MemeInfoState,
-    modifier: Modifier = Modifier,
+    onTryAgain: () -> Unit,
     loadingModifier: Modifier = Modifier
 ) {
     Image(
@@ -183,11 +193,13 @@ fun MemeDetailStateWrapper(
         )
     }
     if (memeInfo.error.isNotBlank()) {
-        Text(
-            text = memeInfo.error!!,
-            color = Color.Red,
-            modifier = modifier,
-            textAlign = TextAlign.Center
+        NoConnectionScreen(
+            { onTryAgain() },
+            Constants.FAILED_TO_LOAD_MEME,
+            20,
+            14,
+            R.drawable.photo,
+            Constants.TRY_AGAIN
         )
     }
 }

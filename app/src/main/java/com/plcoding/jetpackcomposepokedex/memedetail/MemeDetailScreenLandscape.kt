@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -14,13 +15,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
+@ExperimentalComposeUiApi
 @Composable
 fun MemeDetailScreenLandscape(
     navController: NavController,
     memeInfo: MemeInfoState,
     boxCount: Int,
+    onTryAgain: () -> Unit,
     onPreviewClick: () -> Unit,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
+    isFailed: Boolean
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -59,7 +63,8 @@ fun MemeDetailScreenLandscape(
                 contentAlignment = Alignment.Center
             ) {
                 MemeDetailStateWrapper(
-                    memeInfo = memeInfo
+                    memeInfo = memeInfo,
+                    onTryAgain = onTryAgain
                 )
             }
             Column(modifier = Modifier.fillMaxSize()) {
@@ -67,7 +72,8 @@ fun MemeDetailScreenLandscape(
                 Spacer(modifier = Modifier.height(8.dp))
                 DetailScreenButton(
                     { onPreviewClick() },
-                    { onSaveClick() }
+                    { onSaveClick() },
+                    isFailed
                 )
             }
         }

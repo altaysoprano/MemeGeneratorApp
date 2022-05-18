@@ -13,7 +13,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DetailScreenButton(
     onPreviewClick: () -> Unit,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
+    isFailed: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -52,7 +53,8 @@ fun DetailScreenButton(
                 bottom = 2.dp
             ),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onBackground),
-            elevation = ButtonDefaults.elevation(4.dp)
+            elevation = ButtonDefaults.elevation(4.dp),
+            enabled = !isFailed
         ) {
             Icon(
                 Icons.Default.Save,
