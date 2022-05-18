@@ -37,7 +37,6 @@ fun MemeDetailScreen(
 ) {
 
     val textList = viewModel.textList
-    val memeTextList = viewModel.memeTextList
     val memeInfoState = viewModel.memeInfoState
     val alertDialogVisible = viewModel.alertDialogVisible
     val context = LocalContext.current
@@ -49,12 +48,6 @@ fun MemeDetailScreen(
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
     )
-
-    LaunchedEffect(key1 = true) {
-        viewModel.setMemeTextList(boxCount)
-        viewModel.setTextList(boxCount)
-        viewModel.getMemeInfo(memeTextList.value, memeId)
-    }
 
     LaunchedEffect(key1 = true) {
         viewModel.snackbarFlow.collectLatest { event ->

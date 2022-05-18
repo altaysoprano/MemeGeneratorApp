@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.*
 import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
@@ -30,7 +31,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MemeDetailViewModel @Inject constructor(
-    private val repository: MemeRepository
+    private val repository: MemeRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _textList: MutableState<MutableList<String>> = mutableStateOf(
@@ -48,13 +50,22 @@ class MemeDetailViewModel @Inject constructor(
     )
     val memeInfoState: MutableState<MemeInfoState> = _memeInfoState
 
-    val isTyping: MutableState<Boolean> = mutableStateOf(false)
     val alertDialogVisible: MutableState<Boolean> = mutableStateOf(false)
 
     private var isPermissionsGranted = false
 
     private val _snackBarFlow = MutableSharedFlow<SnackbarEvent>()
     val snackbarFlow = _snackBarFlow.asSharedFlow()
+
+    init {
+        savedStateHandle.get<Int>("boxCount")?.let { boxCount ->
+            setMemeTextList(boxCount)
+            setTextList(boxCount)
+        }
+        savedStateHandle.get<String>("memeId")?.let { memeId ->
+            getMemeInfo(memeTextList.value, memeId)
+        }
+    }
 
     fun getMemeInfo(textList: MutableList<String>, id: String) {
         val newList = mutableListOf<String>()

@@ -58,29 +58,6 @@ class MemeListViewModel @Inject constructor(
         _isFocused.value = focused
     }
 
-/*
-    fun loadMemePaginated() {
-        isLoading.value = true
-        viewModelScope.launch {
-            val result = repository.getMemeList()
-            when(result) {
-                is Resource.Success -> {
-                    val memeEntries = result.data!!.data.memes
-
-                    loadError.value = ""
-                    isLoading.value = false
-                    searchedList = memeEntries.map { it.memeToMemeListEntry() }
-                    memeList.value = memeEntries.map {it.memeToMemeListEntry()}
-                }
-                is Resource.Error -> {
-                    loadError.value = result.message!!
-                    isLoading.value = false
-                }
-            }
-        }
-    }
-*/
-
     fun loadMemeList() {
         repository.getMemeList().onEach { result ->
             when(result) {
