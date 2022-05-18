@@ -22,6 +22,7 @@ import com.google.accompanist.permissions.MultiplePermissionsState
 import com.plcoding.jetpackcomposepokedex.repository.MemeRepository
 import com.plcoding.jetpackcomposepokedex.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -43,7 +44,7 @@ class MemeDetailViewModel @Inject constructor(
     private val _memeTextList: MutableState<MutableList<String>> = mutableStateOf(
         mutableListOf("", "", "", "", "", "")
     )
-    val memeTextList: MutableState<MutableList<String>> = _memeTextList
+    private val memeTextList: MutableState<MutableList<String>> = _memeTextList
 
     private val _memeInfoState: MutableState<MemeInfoState> = mutableStateOf(
         MemeInfoState()
@@ -56,6 +57,8 @@ class MemeDetailViewModel @Inject constructor(
 
     private val _snackBarFlow = MutableSharedFlow<SnackbarEvent>()
     val snackbarFlow = _snackBarFlow.asSharedFlow()
+
+    private var job: Job? = null
 
     init {
         savedStateHandle.get<Int>("boxCount")?.let { boxCount ->
@@ -73,7 +76,7 @@ class MemeDetailViewModel @Inject constructor(
         for (i in 0 until newList.size) {
             if (newList[i] == "") newList[i] = " "
         }
-        repository.getMemeInfo(newList, id).onEach { result ->
+        job = repository.getMemeInfo(newList, id).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _memeInfoState.value = MemeInfoState(data = result.data)
