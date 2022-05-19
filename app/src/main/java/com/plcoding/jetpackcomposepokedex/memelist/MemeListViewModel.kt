@@ -81,5 +81,6 @@ class MemeListViewModel @Inject constructor(
 
     private fun checkResults() {
         _noResultsFound.value = memeListState.value.data?.size == 0 && memeListState.value.error.isBlank()
+                && !memeListState.value.isLoading
     }
 }
