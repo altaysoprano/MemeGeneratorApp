@@ -27,7 +27,7 @@ fun NoConnectionScreen(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(id = icon),
-                contentDescription = "No internet connection",
+                contentDescription = "No Internet Connection",
                 modifier = Modifier.fillMaxSize(0.25f)
             )
             Text(text = titleText, fontWeight = FontWeight.Bold, fontSize = titleSize.sp)

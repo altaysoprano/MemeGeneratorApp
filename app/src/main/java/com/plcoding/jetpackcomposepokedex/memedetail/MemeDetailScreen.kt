@@ -88,7 +88,7 @@ fun MemeDetailScreen(
                     navController = navController,
                     memeInfo = memeInfoState.value,
                     boxCount = boxCount,
-                    onTryAgain = {},
+                    onTryAgain = { viewModel.getMemeInfo(textList.value, memeId)},
                     onPreviewClick = { viewModel.getMemeInfo(textList.value, memeId) },
                     onSaveClick = { viewModel.onSaveDialogOpen(memeId) },
                     isFailed = memeInfoState.value.error.isNotBlank()

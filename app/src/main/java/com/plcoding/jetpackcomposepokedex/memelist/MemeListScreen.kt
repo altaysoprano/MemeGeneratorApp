@@ -54,6 +54,7 @@ fun MemeListScreen(
 ) {
 
     val focusManager = LocalFocusManager.current
+    val noResultsFound = viewModel.noResultsFound.value
 
     Surface(
         color = MaterialTheme.colors.background,
@@ -80,6 +81,10 @@ fun MemeListScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             MemeList(navController = navController)
+        }
+        Log.d("Mesaj: ", noResultsFound.toString())
+        if(noResultsFound) {
+            NoResultsFoundScreen()
         }
     }
 }

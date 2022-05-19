@@ -37,6 +37,9 @@ class MemeListViewModel @Inject constructor(
 
     private var searchedList = listOf<MemeListEntry>()
 
+    private val _noResultsFound: MutableState<Boolean> = mutableStateOf(false)
+    val noResultsFound: State<Boolean> = _noResultsFound
+
     init {
         loadMemeList()
     }
@@ -47,6 +50,7 @@ class MemeListViewModel @Inject constructor(
                 it.memeName.contains(query.trim(), ignoreCase = true)
             }
             _memeListState.value = memeListState.value.copy(data = result)
+            checkResults()
         }
     }
 
@@ -73,5 +77,9 @@ class MemeListViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun checkResults() {
+        _noResultsFound.value = memeListState.value.data?.size == 0 && memeListState.value.error.isBlank()
     }
 }
