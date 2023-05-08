@@ -7,4 +7,3 @@ The application is developed using the MVVM architecture and uses Retrofit, Timb
 ### Usage
 
 https://user-images.githubusercontent.com/37440249/231459776-c971e036-8a5c-4f14-94eb-c142cb395697.mp4 
-
